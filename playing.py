@@ -53,10 +53,10 @@ import wandb
 
 
 #Setting up device
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('#' if torch.#.is_available() else 'cpu')
 
-if torch.cuda.is_available():
-    print("OMG cuda is available")
+if torch.#.is_available():
+    print("OMG # is available")
 
 layout = {'cosine': {
     'cosine': ['Multiline', ['cosine/0',
@@ -349,8 +349,8 @@ def train_dp(trainloader, model, optimizer, epoch):
             for tensor_name, tensor in model.named_parameters():
                 if tensor.grad is not None:
                     #Add the gradient 
-                    if device.type == 'cuda':
-                        saved_var[tensor_name].add_(torch.cuda.FloatTensor(tensor.grad.shape).normal_(0, sigma))
+                    if device.type == '#':
+                        saved_var[tensor_name].add_(torch.#.FloatTensor(tensor.grad.shape).normal_(0, sigma))
                     else:
                         saved_var[tensor_name].add_(torch.FloatTensor(tensor.grad.shape).normal_(0, sigma))
                     #Setting tensor gradient to saved gradient over number of microbatches
@@ -534,7 +534,7 @@ if __name__ == '__main__':
     elif helper.params['model'] == 'PretrainedRes': #
         net = models.resnet18(pretrained=True)
         net.fc = nn.Linear(512, num_classes)
-        net = net.cuda()
+        net = net.#()
     elif helper.params['model'] == 'FlexiNet':
         net = FlexiNet(3, num_classes)
     elif helper.params['model'] == 'dif_inception':
@@ -545,7 +545,7 @@ if __name__ == '__main__':
         net = inception_v3(pretrained=True)
         net.fc = nn.Linear(2048, num_classes)
         net.aux_logits = False
-        #model = torch.nn.DataParallel(model).cuda()
+        #model = torch.nn.DataParallel(model).#()
     elif helper.params['model'] == 'mobilenet':
         net = MobileNetV2(n_class=num_classes, input_size=64)
     elif helper.params['model'] == 'word':
@@ -559,8 +559,8 @@ if __name__ == '__main__':
 
     #GPU set-up
     if helper.params.get('multi_gpu', False):
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        logger.info(f"Let's use {torch.cuda.device_count()} GPUs!")
+        device = torch.device("#:0" if torch.#.is_available() else "cpu")
+        logger.info(f"Let's use {torch.#.device_count()} GPUs!")
         net = nn.DataParallel(net)
 
     net.to(device)
@@ -685,7 +685,8 @@ if __name__ == '__main__':
 
 #curl 'https://download.wetransfer.com//eu2/6a0f7ee3c2742f01469ebe3a0c4dce8720210220153552/a822e8b2309b78b5224feea450df401597a7b9f2/s1-2.pdf?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTM4Mzk2NTQsInVuaXF1ZSI6IjZhMGY3ZWUzYzI3NDJmMDE0NjllYmUzYTBjNGRjZTg3MjAyMTAyMjAxNTM1NTIiLCJmaWxlbmFtZSI6InMxLTIucGRmIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvOTdhNDRmOGIxNTcyZDI1ZWY2NjRlYmYwNDAyM2YxZGQxYTdlNjE1ZDlmZTFkMmMzZDM1MWZkY2I1YmNhNzFiMzVjOGUzNjA5M2NhYWM3ODgwZDdhYmIiLCJmaW5nZXJwcmludCI6ImE4MjJlOGIyMzA5Yjc4YjUyMjRmZWVhNDUwZGY0MDE1OTdhN2I5ZjIiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcIjZhMGY3ZWUzYzI3NDJmMDE0NjllYmUzYTBjNGRjZTg3MjAyMTAyMjAxNTM1NTJcIixcImRvd25sb2FkX2lkXCI6MTE0OTczNDk1MDl9fSJ9.j0k0tMpmWtUemUtzij6SadpaXz8SVG5Q4-wok8MIK8U' --location --output my.pdf
 
-#curl ''
+#This is the real deal
+#curl 'https://download.wetransfer.com//eu2/cb20949fa84b01f9ef325c3b8107275920210220152757/fb5d9d03be35ab2c8954da04dc3bb40928d3846c/celeba2.zip?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTM4NDI5NDMsInVuaXF1ZSI6ImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTciLCJmaWxlbmFtZSI6ImNlbGViYTIuemlwIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvNjJhNjIwMzMzOGI3MDQ4MDBkOTc0NTczOTdhOTlkMWNlZmEzOTViZDYwODgzMDdlNGVkYmViN2I2ZDkyMmYzOGI1MDllNGRlNjdkZDQ4MjQzYTQ1MGMiLCJmaW5nZXJwcmludCI6ImZiNWQ5ZDAzYmUzNWFiMmM4OTU0ZGEwNGRjM2JiNDA5MjhkMzg0NmMiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTdcIixcImRvd25sb2FkX2lkXCI6MTE0OTc2MTk0MjB9fSJ9.K8a1s6ieGO6M0PL8Tg1ZeJTzWEbS2hf9V7npX6g8JLs' --location --output celeba2.zip
 #could be that it is better
 #should try that curl comman to maybe save time
 
@@ -700,3 +701,8 @@ if __name__ == '__main__':
 
 #python version is 379 dunno if that is cause its local or why...
 #
+
+
+
+#
+#got the param file
