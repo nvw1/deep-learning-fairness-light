@@ -1,14 +1,14 @@
 name: smiling_celeba_non_dp_27k_female #change this in accordance with the attributes lower down
 test_batch_size: 128 #128
-batch_size: 256 #256
-num_microbatches: 256 #256
+batch_size: 128 #256
+num_microbatches: 128 #256
 lr: 0.00005
 momentum: 0.9
 decay: 5e-4
 S: 5
 z: 0.5
 mu: 0.9
-dp: False #False
+dp: True #False
 epochs: 10
 save_on_epochs: [10, 20, 40, 60]
 optimizer: Adam
@@ -23,5 +23,5 @@ attr_path: /Users/nvw3/Downloads/celeba/imbalanced_attr/27k_female.csv #Changed 
 selected_attr: Smiling
 protected_attr: Male
 labels: [0, 1]
-multi_gpu: False
+multi_gpu: False #Make sure to update this for remote machines
 
