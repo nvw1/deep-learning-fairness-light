@@ -1,0 +1,19 @@
+{
+    "os": "Linux-4.19.121-linuxkit-x86_64-with-debian-buster-sid",
+    "python": "3.7.9",
+    "heartbeatAt": "2021-02-24T15:33:18.164808",
+    "startedAt": "2021-02-24T15:33:17.192479",
+    "docker": null,
+    "cpu_count": 10,
+    "cuda": null,
+    "args": [
+        "--name",
+        "test"
+    ],
+    "state": "running",
+    "codePath": "playing.py",
+    "program": "playing.py",
+    "host": "628834a207dc",
+    "username": "root",
+    "executable": "/opt/conda/bin/python"
+}

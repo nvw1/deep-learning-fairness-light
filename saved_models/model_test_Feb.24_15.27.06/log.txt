@@ -1,0 +1,13 @@
+current path: saved_models/model_test_Feb.24_15.27.06
+DP: True
+128
+5e-05
+0.9
+Length of CelebA dataset: 24000
+Dataset size: 24000. Computing RDP guarantees.
+Model size: 2
+Total number of params for model resnet: 11177538
+| name | test_batch_s | batch_size | num_microbat | lr | momentum | decay | S | z | mu | dp | epochs | save_on_epoc | optimizer | scheduler | save_model | dataset | model | image_dir | attr_path | selected_att | protected_at | labels | multi_gpu | environment_ | current_time |
+|---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
+| smiling_celeba_non_dp_27k_female | 128 | 128 | 128 | 5e-05 | 0.9 | 5e-4 | 5 | 0.5 | 0.9 | True | 10 | [10, 20, 40, 60] | Adam | False | True | celeba | resnet | /Users/nvw3/Downloads/celeba/img_align_celeba/img_align_celeba/ | /Users/nvw3/Downloads/celeba/imbalanced_attr/27k_female.csv | Smiling | Male | [0, 1] | False | test | Feb.24_15.27.06 |
+[0, 1]

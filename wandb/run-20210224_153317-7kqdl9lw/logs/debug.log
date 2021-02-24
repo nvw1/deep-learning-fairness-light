@@ -1,0 +1,78 @@
+2021-02-24 15:33:17,230 INFO    MainThread:668 [wandb_setup.py:_flush():69] setting env: {}
+2021-02-24 15:33:17,230 INFO    MainThread:668 [wandb_setup.py:_flush():69] setting login settings: {}
+2021-02-24 15:33:17,232 INFO    MainThread:668 [wandb_init.py:_log_setup():319] Logging user logs to /Users/nvw3/Desktop/repos/GitHubDesktop/deep-learning-fairness-light/wandb/run-20210224_153317-7kqdl9lw/logs/debug.log
+2021-02-24 15:33:17,233 INFO    MainThread:668 [wandb_init.py:_log_setup():320] Logging internal logs to /Users/nvw3/Desktop/repos/GitHubDesktop/deep-learning-fairness-light/wandb/run-20210224_153317-7kqdl9lw/logs/debug-internal.log
+2021-02-24 15:33:17,233 INFO    MainThread:668 [wandb_init.py:init():352] calling init triggers
+2021-02-24 15:33:17,234 INFO    MainThread:668 [wandb_init.py:init():359] wandb.init called with sweep_config: {}
+config: {}
+2021-02-24 15:33:17,234 INFO    MainThread:668 [wandb_init.py:init():401] starting backend
+2021-02-24 15:33:17,235 INFO    MainThread:668 [backend.py:_multiprocessing_setup():71] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-02-24 15:33:17,257 INFO    MainThread:668 [backend.py:ensure_launched():123] starting backend process...
+2021-02-24 15:33:17,266 INFO    MainThread:668 [backend.py:ensure_launched():128] started backend process with pid: 684
+2021-02-24 15:33:17,268 INFO    MainThread:668 [wandb_init.py:init():406] backend started and connected
+2021-02-24 15:33:17,270 INFO    MainThread:668 [wandb_init.py:init():446] updated telemetry
+2021-02-24 15:33:17,272 INFO    MainThread:668 [wandb_init.py:init():465] communicating current version
+2021-02-24 15:33:17,922 INFO    MainThread:668 [wandb_init.py:init():470] got version response 
+2021-02-24 15:33:17,923 INFO    MainThread:668 [wandb_init.py:init():478] communicating run to backend with 30 second timeout
+2021-02-24 15:33:18,156 INFO    MainThread:668 [wandb_init.py:init():503] starting run threads in backend
+2021-02-24 15:33:18,271 INFO    MainThread:668 [wandb_run.py:_console_start():1422] atexit reg
+2021-02-24 15:33:18,276 INFO    MainThread:668 [wandb_run.py:_redirect():1285] redirect: SettingsConsole.REDIRECT
+2021-02-24 15:33:18,277 INFO    MainThread:668 [wandb_run.py:_redirect():1290] Redirecting console.
+2021-02-24 15:33:18,278 INFO    MainThread:668 [redirect.py:install():213] install start
+2021-02-24 15:33:18,279 INFO    MainThread:668 [redirect.py:install():228] install stop
+2021-02-24 15:33:18,280 INFO    MainThread:668 [redirect.py:install():213] install start
+2021-02-24 15:33:18,281 INFO    MainThread:668 [redirect.py:install():228] install stop
+2021-02-24 15:33:18,282 INFO    MainThread:668 [wandb_run.py:_redirect():1336] Redirects installed.
+2021-02-24 15:33:18,283 INFO    MainThread:668 [wandb_init.py:init():527] run started, returning control to user process
+2021-02-24 15:33:18,286 INFO    MainThread:668 [wandb_run.py:_tensorboard_callback():744] tensorboard callback: runs/test, None
+2021-02-24 15:34:51,346 INFO    MainThread:668 [wandb_run.py:_atexit_cleanup():1392] got exitcode: 255
+2021-02-24 15:34:51,349 INFO    MainThread:668 [wandb_run.py:_restore():1364] restore
+2021-02-24 15:34:51,350 INFO    MainThread:668 [redirect.py:uninstall():232] uninstall start
+2021-02-24 15:34:51,351 INFO    MainThread:668 [redirect.py:_stop():287] _stop: stdout
+2021-02-24 15:34:51,352 INFO    MainThread:668 [redirect.py:_stop():293] _stop closed: stdout
+2021-02-24 15:34:51,352 INFO    stdout    :668 [redirect.py:_pipe_relay():129] relay done saw last write: stdout
+2021-02-24 15:34:51,354 INFO    stdout    :668 [redirect.py:_pipe_relay():145] relay done done: stdout
+2021-02-24 15:34:51,356 INFO    MainThread:668 [redirect.py:_stop():299] _stop joined: stdout
+2021-02-24 15:34:51,356 INFO    MainThread:668 [redirect.py:_stop():301] _stop rd closed: stdout
+2021-02-24 15:34:51,357 INFO    MainThread:668 [redirect.py:uninstall():236] uninstall done
+2021-02-24 15:34:51,358 INFO    MainThread:668 [redirect.py:uninstall():232] uninstall start
+2021-02-24 15:34:51,359 INFO    MainThread:668 [redirect.py:_stop():287] _stop: stderr
+2021-02-24 15:34:51,360 INFO    MainThread:668 [redirect.py:_stop():293] _stop closed: stderr
+2021-02-24 15:34:51,360 INFO    stderr    :668 [redirect.py:_pipe_relay():129] relay done saw last write: stderr
+2021-02-24 15:34:51,361 INFO    stderr    :668 [redirect.py:_pipe_relay():145] relay done done: stderr
+2021-02-24 15:34:51,362 INFO    MainThread:668 [redirect.py:_stop():299] _stop joined: stderr
+2021-02-24 15:34:51,363 INFO    MainThread:668 [redirect.py:_stop():301] _stop rd closed: stderr
+2021-02-24 15:34:51,364 INFO    MainThread:668 [redirect.py:uninstall():236] uninstall done
+2021-02-24 15:34:51,616 INFO    MainThread:668 [wandb_run.py:_wait_for_finish():1515] got exit ret: file_counts {
+  wandb_count: 1
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 480
+  total_bytes: 1568
+}
+
+2021-02-24 15:34:57,791 INFO    MainThread:668 [wandb_run.py:_wait_for_finish():1515] got exit ret: file_counts {
+  wandb_count: 1
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1568
+  total_bytes: 1568
+}
+
+2021-02-24 15:34:59,798 INFO    MainThread:668 [wandb_run.py:_wait_for_finish():1515] got exit ret: done: true
+exit_result {
+}
+file_counts {
+  wandb_count: 5
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 6107
+  total_bytes: 6107
+}
+
+2021-02-24 15:35:00,888 INFO    MainThread:668 [wandb_run.py:_show_summary():1670] rendering summary
+2021-02-24 15:35:00,889 INFO    MainThread:668 [wandb_run.py:_show_history():1708] rendering history
+2021-02-24 15:35:00,890 INFO    MainThread:668 [wandb_run.py:_show_files():1737] logging synced files

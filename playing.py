@@ -48,7 +48,13 @@ freeze_support()
 
 # Add wandb logging which is synced with the Tensorboard
 import wandb 
-#wandb.init(sync_tensorboard=True)
+wandb.init(project="dfl-light", entity="nvw")
+wandb.init(sync_tensorboard=True)
+
+
+
+# Model wand setup 
+# import wandb
 
 
 
@@ -689,7 +695,7 @@ if __name__ == '__main__':
 
 
 #This is the real deal
-#curl 'https://download.wetransfer.com//eu2/cb20949fa84b01f9ef325c3b8107275920210220152757/fb5d9d03be35ab2c8954da04dc3bb40928d3846c/celeba2.zip?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTM5MjI4MjAsInVuaXF1ZSI6ImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTciLCJmaWxlbmFtZSI6ImNlbGViYTIuemlwIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvNjJmMDhhNDZiODI1MTg0M2MwZmQ1MTQ0Y2IyOGQ5Zjc2ZWMzM2NhM2EzMjY3OWQxNWJlZDkwNmQzNWY5Y2IzZjAwNDA0YTZjNDQyYWNkNTQ2MjMzZTciLCJmaW5nZXJwcmludCI6ImZiNWQ5ZDAzYmUzNWFiMmM4OTU0ZGEwNGRjM2JiNDA5MjhkMzg0NmMiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTdcIixcImRvd25sb2FkX2lkXCI6MTE1MDE3OTQ1MjV9fSJ9.cWKm1oI0tYE7TGjZ59T33AKQZXING5GsV-QjF1tk3cg' --location --output celeba2.zip
+#curl 'https://download.wetransfer.com//eu2/cb20949fa84b01f9ef325c3b8107275920210220152757/fb5d9d03be35ab2c8954da04dc3bb40928d3846c/celeba2.zip?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTQxODM0MzEsInVuaXF1ZSI6ImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTciLCJmaWxlbmFtZSI6ImNlbGViYTIuemlwIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvMzM1ZDNlNWQ0MGIwYzdlYzY2MGQ3ZGE0YzE1NTdiMDdkODE1MjQyODc3MTUwOGI2OTQ1NDg4YTY4NGYwZjYzNzI0ZjhmNjMyMGRhNzBhMWMwZTM3MDYiLCJmaW5nZXJwcmludCI6ImZiNWQ5ZDAzYmUzNWFiMmM4OTU0ZGEwNGRjM2JiNDA5MjhkMzg0NmMiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTdcIixcImRvd25sb2FkX2lkXCI6MTE1Mjc4OTAwOTJ9fSJ9.9R-eV8wzEOJaYlh5oHddL5XrKYisXxuHH6G93BX4aL4' --location --output celeba2.zip
 #could be that it is better
 #should try that curl comman to maybe save time
 
@@ -713,7 +719,8 @@ if __name__ == '__main__':
 #3090 16 32 44.7 31.9 0.885/hr usage 80% roughly 6 gig
 #36:28 per full send...
 # 31.86 so that is 1.65/hour epochs per hour and each hour costs 0.885 0.53p per epoch thus 31.8£ 310£
-#
+#need 40
+
 
 
 
@@ -739,3 +746,33 @@ if __name__ == '__main__':
 #for new params taking 15 min but only little resources
 
 
+
+#---- For Starting Docker locally
+# To unzip file
+#apt-get update ; apt-get -y install curl ; apt install unzip -qq ; pip install absl-py ; pip install matplotlib ; pip install scipy ; pip install tensorboardX ; pip install sklearn ; pip install wandb ; pip install tensorboard ; wandb login 3901faa3f69c0e6b1eaf7d3c49f7dbb8e3886dec
+
+
+#Hint for using docker: Pytorch is using dev/shm shared memory to split data loading process thus this maybe increased as standard size only 64m
+
+
+#To set up docker container before watching out for dev/shm
+#To check if it is of sufficent size execute df -h
+#docker run --rm -ti --ipc=host  -v /Users/nvw3/Desktop/repos/GitHubDesktop/deep-learning-fairness-light:/Users/nvw3/Desktop/repos/GitHubDesktop/deep-learning-fairness-light -v /Users/nvw3/Downloads/celeba:/Users/nvw3/Downloads/celeba:ro pytorch/pytorch:latest
+
+#cd /Users/nvw3/Desktop/repos/GitHubDesktop/deep-learning-fairness-light
+#python playing.py --name test
+
+
+
+ 
+
+# pip added wand and tensorboard
+# wand login under wandb login 3901faa3f69c0e6b1eaf7d3c49f7dbb8e3886dec
+
+
+
+#First proper run with set parameters... currently 14 min ish per epoch, low privacy so 
+# formula is minutes per epoch times price so 14*0.8 -> 11.2
+#4gb usage with roughly 70%
+
+#Need to make simpler maybe faster example... 
