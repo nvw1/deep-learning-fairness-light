@@ -19,7 +19,9 @@ dataset: celeba
 model: resnet
 
 image_dir: /Users/nvw3/Downloads/celeba/img_align_celeba/img_align_celeba/ #Changed for local env on MacBook soemtimes need double folder structure as comes out of the zip
+#/workspace/celeba/img_align_celeba/img_align_celeba/ for on jupyter
 attr_path: /Users/nvw3/Downloads/celeba/imbalanced_attr/27k_female.csv #Changed for local env on MacBook
+#/workspace/celeba/img_align_celeba/img_align_celeba/ for on jupyter
 selected_attr: Smiling
 protected_attr: Male
 labels: [0, 1]

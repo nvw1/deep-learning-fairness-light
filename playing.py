@@ -53,10 +53,10 @@ import wandb
 
 
 #Setting up device
-device = torch.device('#' if torch.#.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-if torch.#.is_available():
-    print("OMG # is available")
+if torch.cuda.is_available():
+    print("OMG CUDA is available")
 
 layout = {'cosine': {
     'cosine': ['Multiline', ['cosine/0',
@@ -349,8 +349,8 @@ def train_dp(trainloader, model, optimizer, epoch):
             for tensor_name, tensor in model.named_parameters():
                 if tensor.grad is not None:
                     #Add the gradient 
-                    if device.type == '#':
-                        saved_var[tensor_name].add_(torch.#.FloatTensor(tensor.grad.shape).normal_(0, sigma))
+                    if device.type == 'cuda':
+                        saved_var[tensor_name].add_(torch.cuda.FloatTensor(tensor.grad.shape).normal_(0, sigma))
                     else:
                         saved_var[tensor_name].add_(torch.FloatTensor(tensor.grad.shape).normal_(0, sigma))
                     #Setting tensor gradient to saved gradient over number of microbatches
@@ -534,7 +534,7 @@ if __name__ == '__main__':
     elif helper.params['model'] == 'PretrainedRes': #
         net = models.resnet18(pretrained=True)
         net.fc = nn.Linear(512, num_classes)
-        net = net.#()
+        net = net.cuda()
     elif helper.params['model'] == 'FlexiNet':
         net = FlexiNet(3, num_classes)
     elif helper.params['model'] == 'dif_inception':
@@ -545,7 +545,7 @@ if __name__ == '__main__':
         net = inception_v3(pretrained=True)
         net.fc = nn.Linear(2048, num_classes)
         net.aux_logits = False
-        #model = torch.nn.DataParallel(model).#()
+        #model = torch.nn.DataParallel(model).cuda()
     elif helper.params['model'] == 'mobilenet':
         net = MobileNetV2(n_class=num_classes, input_size=64)
     elif helper.params['model'] == 'word':
@@ -559,8 +559,8 @@ if __name__ == '__main__':
 
     #GPU set-up
     if helper.params.get('multi_gpu', False):
-        device = torch.device("#:0" if torch.#.is_available() else "cpu")
-        logger.info(f"Let's use {torch.#.device_count()} GPUs!")
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        logger.info(f"Let's use {torch.cuda.device_count()} GPUs!")
         net = nn.DataParallel(net)
 
     net.to(device)
@@ -683,26 +683,59 @@ if __name__ == '__main__':
 #later make sure wandb works that would be a nice way to get back results
 
 
-#curl 'https://download.wetransfer.com//eu2/6a0f7ee3c2742f01469ebe3a0c4dce8720210220153552/a822e8b2309b78b5224feea450df401597a7b9f2/s1-2.pdf?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTM4Mzk2NTQsInVuaXF1ZSI6IjZhMGY3ZWUzYzI3NDJmMDE0NjllYmUzYTBjNGRjZTg3MjAyMTAyMjAxNTM1NTIiLCJmaWxlbmFtZSI6InMxLTIucGRmIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvOTdhNDRmOGIxNTcyZDI1ZWY2NjRlYmYwNDAyM2YxZGQxYTdlNjE1ZDlmZTFkMmMzZDM1MWZkY2I1YmNhNzFiMzVjOGUzNjA5M2NhYWM3ODgwZDdhYmIiLCJmaW5nZXJwcmludCI6ImE4MjJlOGIyMzA5Yjc4YjUyMjRmZWVhNDUwZGY0MDE1OTdhN2I5ZjIiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcIjZhMGY3ZWUzYzI3NDJmMDE0NjllYmUzYTBjNGRjZTg3MjAyMTAyMjAxNTM1NTJcIixcImRvd25sb2FkX2lkXCI6MTE0OTczNDk1MDl9fSJ9.j0k0tMpmWtUemUtzij6SadpaXz8SVG5Q4-wok8MIK8U' --location --output my.pdf
+#curl 'https://download.wetransfer.com//eu2/cb20949fa84b01f9ef325c3b8107275920210220152757/fb5d9d03be35ab2c8954da04dc3bb40928d3846c/celeba2.zip?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTM5MjI4MjAsInVuaXF1ZSI6ImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTciLCJmaWxlbmFtZSI6ImNlbGViYTIuemlwIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvNjJmMDhhNDZiODI1MTg0M2MwZmQ1MTQ0Y2IyOGQ5Zjc2ZWMzM2NhM2EzMjY3OWQxNWJlZDkwNmQzNWY5Y2IzZjAwNDA0YTZjNDQyYWNkNTQ2MjMzZTciLCJmaW5nZXJwcmludCI6ImZiNWQ5ZDAzYmUzNWFiMmM4OTU0ZGEwNGRjM2JiNDA5MjhkMzg0NmMiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTdcIixcImRvd25sb2FkX2lkXCI6MTE1MDE3OTQ1MjV9fSJ9.cWKm1oI0tYE7TGjZ59T33AKQZXING5GsV-QjF1tk3cg' --location --output my.pdf
+
+#curl 'https://download.wetransfer.com//eu2/cb20949fa84b01f9ef325c3b8107275920210220152757/fb5d9d03be35ab2c8954da04dc3bb40928d3846c/celeba2.zip?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTM5MjI4MjAsInVuaXF1ZSI6ImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTciLCJmaWxlbmFtZSI6ImNlbGViYTIuemlwIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvNjJmMDhhNDZiODI1MTg0M2MwZmQ1MTQ0Y2IyOGQ5Zjc2ZWMzM2NhM2EzMjY3OWQxNWJlZDkwNmQzNWY5Y2IzZjAwNDA0YTZjNDQyYWNkNTQ2MjMzZTciLCJmaW5nZXJwcmludCI6ImZiNWQ5ZDAzYmUzNWFiMmM4OTU0ZGEwNGRjM2JiNDA5MjhkMzg0NmMiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTdcIixcImRvd25sb2FkX2lkXCI6MTE1MDE3OTQ1MjV9fSJ9.cWKm1oI0tYE7TGjZ59T33AKQZXING5GsV-QjF1tk3cg' --location --output my.pdf
+
 
 #This is the real deal
-#curl 'https://download.wetransfer.com//eu2/cb20949fa84b01f9ef325c3b8107275920210220152757/fb5d9d03be35ab2c8954da04dc3bb40928d3846c/celeba2.zip?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTM4NDI5NDMsInVuaXF1ZSI6ImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTciLCJmaWxlbmFtZSI6ImNlbGViYTIuemlwIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvNjJhNjIwMzMzOGI3MDQ4MDBkOTc0NTczOTdhOTlkMWNlZmEzOTViZDYwODgzMDdlNGVkYmViN2I2ZDkyMmYzOGI1MDllNGRlNjdkZDQ4MjQzYTQ1MGMiLCJmaW5nZXJwcmludCI6ImZiNWQ5ZDAzYmUzNWFiMmM4OTU0ZGEwNGRjM2JiNDA5MjhkMzg0NmMiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTdcIixcImRvd25sb2FkX2lkXCI6MTE0OTc2MTk0MjB9fSJ9.K8a1s6ieGO6M0PL8Tg1ZeJTzWEbS2hf9V7npX6g8JLs' --location --output celeba2.zip
+#curl 'https://download.wetransfer.com//eu2/cb20949fa84b01f9ef325c3b8107275920210220152757/fb5d9d03be35ab2c8954da04dc3bb40928d3846c/celeba2.zip?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTM5MjI4MjAsInVuaXF1ZSI6ImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTciLCJmaWxlbmFtZSI6ImNlbGViYTIuemlwIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvNjJmMDhhNDZiODI1MTg0M2MwZmQ1MTQ0Y2IyOGQ5Zjc2ZWMzM2NhM2EzMjY3OWQxNWJlZDkwNmQzNWY5Y2IzZjAwNDA0YTZjNDQyYWNkNTQ2MjMzZTciLCJmaW5nZXJwcmludCI6ImZiNWQ5ZDAzYmUzNWFiMmM4OTU0ZGEwNGRjM2JiNDA5MjhkMzg0NmMiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTdcIixcImRvd25sb2FkX2lkXCI6MTE1MDE3OTQ1MjV9fSJ9.cWKm1oI0tYE7TGjZ59T33AKQZXING5GsV-QjF1tk3cg' --location --output celeba2.zip
 #could be that it is better
 #should try that curl comman to maybe save time
 
 #Somehow not using gpu? why?
 
 
-
-
-
-
-
-
-#python version is 379 dunno if that is cause its local or why...
 #
-
 
 
 #
 #got the param file
+
+#TODO put the scripts together maybe possible to automate everything just need to uplaod on python scri
+#needed step is how to download the repo from github but thats about it
+#would be nice to have the setup completly outomated and only needing to start the file
+#also need to make sure it works with wandb
+
+#Looks like full send dp on a 3090 is taknig 36 minutes for one epoch...
+
+#Price calculator
+#3090 16 32 44.7 31.9 0.885/hr usage 80% roughly 6 gig
+#36:28 per full send...
+# 31.86 so that is 1.65/hour epochs per hour and each hour costs 0.885 0.53p per epoch thus 31.8£ 310£
+#
+
+
+
+#
+#2x Tesla V100 26 193 31.3 tflops 1.447/hr at 64 amnd 60 % usage each and 4gigabite each... oh i forgot to change the requirements didnt i 
+#17 ish buit that was on half batch half minibatch and half pixel size at least from the data loader
+# 33:40 per full send ish
+# actually 6 gig each aswell and 85% /+- 220 W per gpu usage
+# 48.3298 lower better 1.8 per hour 0.80p per epoch 48£ Thus making all 10 datapoints would cost 480£ for all ten but once data is prepped I can get the results within  3 days.
+#
+#with scheduler on a little less than 34
+
+
+
+
+
+#4x 3090 50% only 2gig each looks like 13 min per epoch...
+#price tag 4.55
+#oh no slowing down massively about 17 min per epoch... so total time 60*17 = 1200-180 = 1020... that is 17h and 77.4£ per iteration...
+#
+#So what happens if we lower the batch size
+
+#for new params taking 15 min but only little resources
+
+
