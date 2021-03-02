@@ -695,7 +695,7 @@ if __name__ == '__main__':
 
 
 #This is the real deal
-#curl 'https://download.wetransfer.com//eu2/cb20949fa84b01f9ef325c3b8107275920210220152757/fb5d9d03be35ab2c8954da04dc3bb40928d3846c/celeba2.zip?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTQxODM0MzEsInVuaXF1ZSI6ImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTciLCJmaWxlbmFtZSI6ImNlbGViYTIuemlwIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvMzM1ZDNlNWQ0MGIwYzdlYzY2MGQ3ZGE0YzE1NTdiMDdkODE1MjQyODc3MTUwOGI2OTQ1NDg4YTY4NGYwZjYzNzI0ZjhmNjMyMGRhNzBhMWMwZTM3MDYiLCJmaW5nZXJwcmludCI6ImZiNWQ5ZDAzYmUzNWFiMmM4OTU0ZGEwNGRjM2JiNDA5MjhkMzg0NmMiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTdcIixcImRvd25sb2FkX2lkXCI6MTE1Mjc4OTAwOTJ9fSJ9.9R-eV8wzEOJaYlh5oHddL5XrKYisXxuHH6G93BX4aL4' --location --output celeba2.zip
+#curl 'https://download.wetransfer.com//eu2/cb20949fa84b01f9ef325c3b8107275920210220152757/fb5d9d03be35ab2c8954da04dc3bb40928d3846c/celeba2.zip?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTQzNDMzOTAsInVuaXF1ZSI6ImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTciLCJmaWxlbmFtZSI6ImNlbGViYTIuemlwIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvN2Q0ODg5NWJlOTVhYzljYzcwNjZlNjg2NmVlMDkyY2E5NmFmMGM5ZjA2ZDZhZmQ2NTVmMTYwNjc4MDVjODU1OWFlNjVjNWFmYTlkZTg4YTEyODg4MzIiLCJmaW5nZXJwcmludCI6ImZiNWQ5ZDAzYmUzNWFiMmM4OTU0ZGEwNGRjM2JiNDA5MjhkMzg0NmMiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTdcIixcImRvd25sb2FkX2lkXCI6MTE1NDMwODIzMDl9fSJ9.5vG6zQsMDVEAtdHgS4rLQXkYJ7JN0S8TgJN79e06gAU' --location --output celeba2.zip
 #could be that it is better
 #should try that curl comman to maybe save time
 
@@ -747,8 +747,16 @@ if __name__ == '__main__':
 
 
 
+
+#4x 3090 3.6$
+#only 2gig each 30% usage
+#looking at 15 min an epoch... thus
+
+
+
 #---- For Starting Docker locally
 # To unzip file
+#First run this
 #apt-get update ; apt-get -y install curl ; apt install unzip -qq ; pip install absl-py ; pip install matplotlib ; pip install scipy ; pip install tensorboardX ; pip install sklearn ; pip install wandb ; pip install tensorboard ; wandb login 3901faa3f69c0e6b1eaf7d3c49f7dbb8e3886dec
 
 
