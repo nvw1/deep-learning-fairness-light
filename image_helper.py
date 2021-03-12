@@ -368,7 +368,7 @@ class ImageHelper(Helper):
         selected_attrs = ''
         
         crop_size = 178 #178 #TODO maybe lower image resolution?
-        image_size = 64 #128 #TODO pixels find me
+        image_size = 128 #128 #TODO pixels find me
         
         flip = transforms.RandomHorizontalFlip()
         crop = transforms.CenterCrop(crop_size)
