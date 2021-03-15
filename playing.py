@@ -537,7 +537,7 @@ if __name__ == '__main__':
     elif helper.params['model'] == 'resnet':
         logger.info(f'Model size: {num_classes}')
         net = models.resnet18(num_classes=num_classes)
-    elif helper.params['model'] == 'PretrainedRes': #
+    elif helper.params['model'] == 'PretrainedRes': #actually only using this one only
         net = models.resnet18(pretrained=True)
         net.fc = nn.Linear(512, num_classes)
         net = net.cuda()
