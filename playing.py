@@ -310,6 +310,7 @@ def train_dp(trainloader, model, optimizer, epoch):
 
             saved_var = dict()
 
+            #s
             #Set up saved var with place holders
             for tensor_name, tensor in model.named_parameters():
                 saved_var[tensor_name] = torch.zeros_like(tensor)
@@ -400,7 +401,6 @@ def train(trainloader, model, optimizer, epoch):
     model.train()
     running_loss = 0.0
 
-    label_norms = defaultdict(list)
 
 
     with tqdm(total=len(trainloader), leave=True) as pbar:
@@ -421,30 +421,7 @@ def train(trainloader, model, optimizer, epoch):
             outputs = model(inputs)
             loss = criterion(outputs, labels)
 
-            # Do same as in with for parameter comparison.
-            # Finding the loss per class
-
-            #Record losses in tensor form
-            #tensor getting reshaped to microbatch and -1
-            running_loss += torch.mean(loss).item() #just for testing please remove me again.
-            lossTest = loss.reshape(num_microbatches, -1)
-            losses = torch.mean(lossTest, dim=1)
-
-            for pos, j in enumerate(losses):
-                j.backward(retain_graph=True)
-
-
-                #Gradients are clipped by Amount S
-                #TODO S never gets passed down to funciton bad coding practice
-                total_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), S)
-
-
-                if helper.params['dataset'] == 'dif':#TODO this can be deleted as not being used
-                    label_norms[f'{labels[pos]}_{helper.label_skin_list[idxs[pos]]}'].append(total_norm)
-                else:
-                    label_norms[int(labels[pos])].append(total_norm)#Add the clipped norms to label norms
-
-
+            
             loss.backward()
             optimizer.step()
             # logger.info statistics
@@ -455,15 +432,6 @@ def train(trainloader, model, optimizer, epoch):
                 plot(epoch * len(trainloader) + i, running_loss, 'Train Loss')
                 running_loss = 0.0
             pbar.update(1)
-
-    
-    for pos, norms in sorted(label_norms.items(), key=lambda x: x[0]):
-        logger.info(f"{pos}: {torch.mean(torch.stack(norms))}")
-        if helper.params['dataset'] == 'dif':
-            plot(epoch, torch.mean(torch.stack(norms)), f'dif_norms_class/{pos}')
-        else:
-            plot(epoch, torch.mean(torch.stack(norms)), f'norms/class_{pos}')
-
 
 if __name__ == '__main__':
     freeze_support()
