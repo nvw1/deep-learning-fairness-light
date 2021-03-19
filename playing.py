@@ -427,7 +427,8 @@ def train(trainloader, model, optimizer, epoch):
 
             #Record losses in tensor form
             #tensor getting reshaped to microbatch and -1
-            losses = torch.mean(loss.reshape(num_microbatches, -1), dim=1)
+            lossTest = loss.reshape(num_microbatches, -1)
+            losses = torch.mean(lossTest, dim=1)
             for pos, j in enumerate(losses):
                 j.backward(retain_graph=True)
 
