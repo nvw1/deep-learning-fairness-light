@@ -336,6 +336,7 @@ def train_dp(trainloader, model, optimizer, epoch):
                 #Gradients are clipped by Amount S
                 #TODO S never gets passed down to funciton bad coding practice
                 total_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), S)
+                #25 for 30  0.8 and 19 for 70 0.27 so to
 
 
                 if helper.params['dataset'] == 'dif':#TODO this can be deleted as not being used
@@ -391,13 +392,15 @@ def train_dp(trainloader, model, optimizer, epoch):
         if helper.params['dataset'] == 'dif':
             plot(epoch, torch.mean(torch.stack(norms)), f'dif_norms_class/{pos}')
         else:
-            plot(epoch, torch.mean(torch.stack(norms)), f'norms/class_{pos}')
+            plot(epoch, torch.mean(torch.stack(norms)), f'norms/class_{pos}')#here
 
 
 def train(trainloader, model, optimizer, epoch):
     freeze_support()
     model.train()
     running_loss = 0.0
+
+    label_norms = defaultdict(list)
 
 
     with tqdm(total=len(trainloader), leave=True) as pbar:
@@ -406,12 +409,39 @@ def train(trainloader, model, optimizer, epoch):
 
             inputs = inputs.to(device)
             labels = labels.to(device)
+
+            
+
+
+
             # zero the parameter gradients
             optimizer.zero_grad()
 
+            
             # forward + backward + optimize
             outputs = model(inputs)
             loss = criterion(outputs, labels)
+
+            # Do same as in with for parameter comparison.
+            # Finding the loss per class
+
+            #Record losses in tensor form
+            #tensor getting reshaped to microbatch and -1
+            losses = torch.mean(loss.reshape(num_microbatches, -1), dim=1)
+            for pos, j in enumerate(losses):
+                j.backward(retain_graph=True)
+
+
+                #Gradients are clipped by Amount S
+                #TODO S never gets passed down to funciton bad coding practice
+                total_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), S)
+
+
+                if helper.params['dataset'] == 'dif':#TODO this can be deleted as not being used
+                    label_norms[f'{labels[pos]}_{helper.label_skin_list[idxs[pos]]}'].append(total_norm)
+                else:
+                    label_norms[int(labels[pos])].append(total_norm)#Add the clipped norms to label norms
+
 
             loss.backward()
             optimizer.step()
@@ -423,6 +453,14 @@ def train(trainloader, model, optimizer, epoch):
                 plot(epoch * len(trainloader) + i, running_loss, 'Train Loss')
                 running_loss = 0.0
             pbar.update(1)
+
+    
+    for pos, norms in sorted(label_norms.items(), key=lambda x: x[0]):
+        logger.info(f"{pos}: {torch.mean(torch.stack(norms))}")
+        if helper.params['dataset'] == 'dif':
+            plot(epoch, torch.mean(torch.stack(norms)), f'dif_norms_class/{pos}')
+        else:
+            plot(epoch, torch.mean(torch.stack(norms)), f'norms/class_{pos}')
 
 
 if __name__ == '__main__':
@@ -785,3 +823,10 @@ if __name__ == '__main__':
 #4gb usage with roughly 70%
 
 #Need to make simpler maybe faster example... 
+
+
+#TODO after done make a program with seed for comparison and find out the fairness metrics
+#can we use the other one for fairness comparison -new paper could be on medical data.
+#Create the datapoints that you wanted to create...
+#memorisation comparison... is one subgroup more protected than the other? should be as less data... is this true though?
+#What happens if we use less data and augment it?
