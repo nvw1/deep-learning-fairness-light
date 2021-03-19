@@ -413,7 +413,6 @@ def train(trainloader, model, optimizer, epoch):
             
 
 
-
             # zero the parameter gradients
             optimizer.zero_grad()
 
@@ -427,8 +426,10 @@ def train(trainloader, model, optimizer, epoch):
 
             #Record losses in tensor form
             #tensor getting reshaped to microbatch and -1
+            running_loss += torch.mean(loss).item() #just for testing please remove me again.
             lossTest = loss.reshape(num_microbatches, -1)
             losses = torch.mean(lossTest, dim=1)
+
             for pos, j in enumerate(losses):
                 j.backward(retain_graph=True)
 
