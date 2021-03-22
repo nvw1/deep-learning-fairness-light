@@ -684,6 +684,7 @@ if __name__ == '__main__':
 
 #v
 #Now we need to figure out how to mount the data properly
+#new thing https://we.tl/t-Jx1mwGeR9D
 #https://we.tl/t-HuPJj6RbEG
 #test file: https://we.tl/t-7SDA7EXiYg
 #find a way to automate/test this..
