@@ -681,10 +681,24 @@ if __name__ == '__main__':
 
 
 
+#To keep colab running:
+# function ConnectButton(){
+#     console.log("Connect pushed"); 
+#     document.querySelector("#top-toolbar > colab-connect-button").shadowRoot.querySelector("#connect").click() 
+# }
+# setInterval(ConnectButton,60000);
+
 
 #v
 #Now we need to figure out how to mount the data properly
-#new thing https://we.tl/t-Jx1mwGeR9D
+#new thing3 now with further data splits: https://we.tl/t-e3fNm5XDCm
+# Code to keep colab alive:
+# function ConnectButton(){
+#     console.log("Connect pushed"); 
+#     document.querySelector("#top-toolbar > colab-connect-button").shadowRoot.querySelector("#connect").click() 
+# }
+# setInterval(ConnectButton,60000);
+#new thing https://we.tl/t-AkvcI6YfKR
 #https://we.tl/t-HuPJj6RbEG
 #test file: https://we.tl/t-7SDA7EXiYg
 #find a way to automate/test this..

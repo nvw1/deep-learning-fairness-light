@@ -1,4 +1,4 @@
-name: smiling_celeba_non_dp_27k_female #change this in accordance with the attributes lower down
+name: smiling_celeba_non_dp_92i_female #change this in accordance with the attributes lower down
 test_batch_size: 128 #128
 batch_size: 32 #256
 num_microbatches: 32 #256
@@ -6,9 +6,9 @@ lr: 0.00005
 momentum: 0.9
 decay: 5e-4
 S: 5
-z: 0.5
+z: 0.7
 mu: 0.9
-dp: False #False
+dp: True #False
 epochs: 60
 save_on_epochs: [10, 20, 40, 60]
 optimizer: Adam
@@ -22,7 +22,7 @@ image_dir: /content/celeba/img_align_celeba/img_align_celeba/ #Changed for local
 #local /Users/nvw3/Downloads/celeba/img_align_celeba/img_align_celeba/
 #/workspace/celeba/img_align_celeba/img_align_celeba/ for on jupyter
 #Change to /content/ for google drive
-attr_path: /content/celeba/imbalanced_attr/21k_female.csv #Changed for local env on MacBook
+attr_path: /content/celeba/imbalanced_attr/92i_female.csv #Changed for local env on MacBook
 #local /Users/nvw3/Downloads/celeba/img_align_celeba/img_align_celeba/
 #/workspace/celeba/img_align_celeba/img_align_celeba/ for on jupyter
 selected_attr: Smiling

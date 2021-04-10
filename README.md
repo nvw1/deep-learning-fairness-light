@@ -35,3 +35,14 @@ https://arxiv.org/pdf/2009.06389.pdf
 }`
 
 =======
+
+
+
+
+keeping colab running with:
+
+function ConnectButton(){
+    console.log("Connect pushed"); 
+    document.querySelector("#top-toolbar > colab-connect-button").shadowRoot.querySelector("#connect").click() 
+}
+setInterval(ConnectButton,60000);
