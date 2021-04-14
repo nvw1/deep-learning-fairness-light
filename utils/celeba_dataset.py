@@ -80,8 +80,8 @@ class CelebADataset(Dataset):
             self.idx2attr[i] = attr_name
 
         lines = lines[2:]
-        #random.seed(1234) # as we will be shuffeling later there is no need to do such thing here.
-        random.shuffle(lines) # TODO This combined with further down leads to unfair splits... should split the data equally for both... TODO
+        random.seed(1234) # as we will be shuffeling later there is no need to do such thing here.
+        #random.shuffle(lines) # TODO This combined with further down leads to unfair splits... should split the data equally for both... TODO
         # so here we actually need to pick the equal amount from each group just to be representative...
         # Best way is...
         # Way of approaching split lines into two take from each and then put back to gether and then start shuffeling
@@ -184,7 +184,7 @@ class CelebADataset(Dataset):
                             else:
                                 self.train_dataset.append([filename, protected_label, label])
                         else: # If male not smiling
-                            if maleNoSmileCount < maleMinSmile: # only get enough
+                            if femaleNoSmileCount < femaleMinSmile: # only get enough
                                 self.test_dataset.append([filename, protected_label, label])
                                 testSetCounter += 1
                                 femaleNoSmileCount += 1
