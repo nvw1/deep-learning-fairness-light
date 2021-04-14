@@ -21,7 +21,7 @@ class CelebADataset(Dataset):
         self.test_dataset = []
         self.attr2idx = {}
         self.idx2attr = {}
-        self.preprocess()
+        self.preprocessEqual()
 
         if mode == 'train':
             self.num_images = len(self.train_dataset)
@@ -30,6 +30,8 @@ class CelebADataset(Dataset):
 
     def preprocess(self):
         """Preprocess the CelebA attribute file."""
+        # Or we could change the attribute stuff beforehand
+
         lines = [line.rstrip() for line in open(self.attr_path, 'r')]
         all_attr_names = lines[0].split(',')
         for i, attr_name in enumerate(all_attr_names):
@@ -38,7 +40,10 @@ class CelebADataset(Dataset):
 
         lines = lines[2:]
         random.seed(1234)
-        random.shuffle(lines)
+        random.shuffle(lines) # TODO This combined with further down leads to unfair splits... should split the data equally for both... TODO
+        # so here we actually need to pick the equal amount from each group just to be representative...
+        # Best way is...
+        # Way of approaching split lines into two take from each and then put back to gether and then start shuffeling
         for i, line in enumerate(lines):
             split = line.split(',')
             filename = split[0]
@@ -64,6 +69,135 @@ class CelebADataset(Dataset):
             
 
         print('Finished preprocessing the CelebA dataset...')
+    
+    def preprocessEqual(self):
+        """Preprocess the CelebA attribute file."""
+        print('Entering equal preprocessing this is still in alpha. Change setting in celeba_dataset.py')
+        lines = [line.rstrip() for line in open(self.attr_path, 'r')]
+        all_attr_names = lines[0].split(',')
+        for i, attr_name in enumerate(all_attr_names):
+            self.attr2idx[attr_name] = i
+            self.idx2attr[i] = attr_name
+
+        lines = lines[2:]
+        #random.seed(1234) # as we will be shuffeling later there is no need to do such thing here.
+        random.shuffle(lines) # TODO This combined with further down leads to unfair splits... should split the data equally for both... TODO
+        # so here we actually need to pick the equal amount from each group just to be representative...
+        # Best way is...
+        # Way of approaching split lines into two take from each and then put back to gether and then start shuffeling
+        classOneMale = 0
+        classTwoFemale = 0
+
+        #Re counting the balance to allow for fair distribution
+        for i, line in enumerate(lines):
+            split = line.split(',')
+            filename = split[0]
+            values = split[0:]
+            idx = self.attr2idx[self.selected_attr]
+            protected_idx = self.attr2idx[self.protected_attr]
+            if values[protected_idx] == '1':
+                classOneMale += 1
+            else:
+                classTwoFemale += 1
+        
+        
+        ratio = classOneMale/classTwoFemale
+
+        #As the training set will be 20% of data we re do this here to ensure the right min amount later
+        maleMin = classOneMale/5
+        femaleMin = classTwoFemale/5
+        maleCounter = 0
+        femaleCounter = 0
+        testSetCounter = 0 
+
+        maleMinSmile = maleMin/2
+        femaleMinSmile = femaleMin/2
+        maleSmileCount = 0
+        maleNoSmileCount = 0
+        femaleSmileCount = 0
+        femaleNoSmileCount = 0
+
+        for i, line in enumerate(lines):
+            split = line.split(',')
+            filename = split[0]
+            values = split[0:]
+            idx = self.attr2idx[self.selected_attr]
+            protected_idx = self.attr2idx[self.protected_attr]
+            
+            if values[idx] == '1':
+                label = int(1)
+            else:
+                label = int(0)
+               
+            if values[protected_idx] == '1':
+                protected_label = int(1)
+            else:
+                protected_label = int(0)
+
+            # Use an 80/20 train/test split. With 30,000 in the dataset this is 6,000 in test.
+            # Also this should probably be just i as i+1 results in 5999 rather than the 6kbut we'll let that slide...
+            # need to split the first so and so much but the difficulty being that we dont know what the split is however with data gettign smaller it is important that we ensure the testing data has the right split...
+            # as this might effect performance too.
+            # Or in other words these measures are highly sensitive to small imbalances...
+
+            # And we have two factors playing into this one is the gender and the second one is the imbalance between smiling and not smiling
+            # We could fix both or
+            # as there are two variables this makes it already have an effect from numbers as big as 10% at 30k or 300 in the testing set this also depends on how big you make your training set... and also might have an impact on the training... 
+            # How could we avoid this...
+            # We could try the lambda proposition
+
+
+            # Leaving this for now to allow comparability:
+            # As we assume that lines are not shuffled we are relying on the dataset beginning with males
+            if (maleCounter < maleMin) and (protected_label == 1) :
+                self.test_dataset.append([filename, protected_label, label])
+
+            # This just ensures the female male ratio: ----> now we need to ensure the smiling non smiling ration
+            if testSetCounter < 6000:
+                if (protected_label == 1): # If male
+                    if maleCounter < maleMin:
+                        if label == 1: #If Smiling 
+                            if maleSmileCount < maleMinSmile: # only get enough
+                                self.test_dataset.append([filename, protected_label, label])
+                                testSetCounter += 1
+                                maleSmileCount += 1
+                            else:
+                                self.train_dataset.append([filename, protected_label, label])
+                        else: # If male not smiling
+                            if maleNoSmileCount < maleMinSmile: # only get enough
+                                self.test_dataset.append([filename, protected_label, label])
+                                testSetCounter += 1
+                                maleNoSmileCount += 1
+                            else:
+                                self.train_dataset.append([filename, protected_label, label])
+                    else: # Add male to training as there is enough in test data
+                        self.train_dataset.append([filename, protected_label, label])
+                else : # If female
+                    if femaleCounter < femaleMin: # if there is not enought in tringinge
+                        if label == 1: #If Smiling 
+                            if femaleSmileCount < femaleMinSmile: # only get enough
+                                self.test_dataset.append([filename, protected_label, label])
+                                testSetCounter += 1
+                                femaleSmileCount +=1
+                            else:
+                                self.train_dataset.append([filename, protected_label, label])
+                        else: # If male not smiling
+                            if maleNoSmileCount < maleMinSmile: # only get enough
+                                self.test_dataset.append([filename, protected_label, label])
+                                testSetCounter += 1
+                                femaleNoSmileCount += 1
+                            else:
+                                self.train_dataset.append([filename, protected_label, label])
+                    else: # Add male to training as there is enough in test data
+                        self.train_dataset.append([filename, protected_label, label])
+            else:
+                self.train_dataset.append([filename, protected_label, label])
+
+            
+            
+
+        print('Finished preprocessing the CelebA dataset... the equal way')
+
 
     def __getitem__(self, index):
         """Return one image and its corresponding attribute label."""
