@@ -151,13 +151,15 @@ class CelebADataset(Dataset):
 
             # Leaving this for now to allow comparability:
             # As we assume that lines are not shuffled we are relying on the dataset beginning with males
-            if (maleCounter < maleMin) and (protected_label == 1) :
-                self.test_dataset.append([filename, protected_label, label])
+            #What the hell is? TODO
+            # if (maleCounter < maleMin) and (protected_label == 1) :
+            #     self.test_dataset.append([filename, protected_label, label])
 
             # This just ensures the female male ratio: ----> now we need to ensure the smiling non smiling ration
             if testSetCounter < 6000:
                 if (protected_label == 1): # If male
-                    if maleCounter < maleMin:
+
+                    if maleCounter < maleMin: # if we dont have enough males in training set
                         if label == 1: #If Smiling 
                             if maleSmileCount < maleMinSmile: # only get enough
                                 self.test_dataset.append([filename, protected_label, label])
@@ -174,6 +176,7 @@ class CelebADataset(Dataset):
                                 self.train_dataset.append([filename, protected_label, label])
                     else: # Add male to training as there is enough in test data
                         self.train_dataset.append([filename, protected_label, label])
+
                 else : # If female
                     if femaleCounter < femaleMin: # if there is not enought in tringinge
                         if label == 1: #If Smiling 
