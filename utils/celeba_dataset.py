@@ -116,6 +116,8 @@ class CelebADataset(Dataset):
         maleNoSmileCount = 0
         femaleSmileCount = 0
         femaleNoSmileCount = 0
+        print("maleMin=",maleMin,"FemaleMin = ", femaleMin)
+        
 
         for i, line in enumerate(lines):
             split = line.split(',')
@@ -195,7 +197,7 @@ class CelebADataset(Dataset):
 
             
             
-
+        print("maleSmileCount:",maleSmileCount,"maleNoSmileCount:",maleNoSmileCount,"femaleSmileCount:",femaleSmileCount,"femaleNoSmileCount:",femaleNoSmileCount)
         print('Finished preprocessing the CelebA dataset... the equal way')
 
 
