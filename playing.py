@@ -227,7 +227,7 @@ def test(net, epoch, testloader, vis=True):
                                                       female_predict_labels,
                                                       labels=helper.labels,
                                                       normalize=False)
-        writer.add_figure(figure=female_fig, global_step=epoch, tag='tag/female_unnormalized_cm')
+        writer.add_figure(figure=female_fig, global_step=epoch, tag='tag/female_unnormalized_cm') #Making the confusion matrix
         # Accuracy
         plot(epoch, 100 * female_correct / female_total, "Female Accuracy")
         # Precision
@@ -276,6 +276,7 @@ def train_dp(trainloader, model, optimizer, epoch):
     optimizer: adam/SGD
     epoch: int : the amount of epochs to be run
     """
+    #Trains for one epoch
 
     freeze_support()
     norm_type = 2 #TODO check if still needed not used
@@ -288,6 +289,7 @@ def train_dp(trainloader, model, optimizer, epoch):
     ssum = 0
     
     with tqdm(total=len(trainloader), leave=True) as pbar:
+        #For each data point in the trainloader i suppose this is likley to be for each batch 
         for i, data in enumerate(trainloader, 0):
             inputs, protected_labels, labels = data #replace protected_labels
             #TODO inspect data to see what is actually going on
@@ -299,7 +301,7 @@ def train_dp(trainloader, model, optimizer, epoch):
             #Clears gradient of all optimizers
             optimizer.zero_grad()
 
-
+            # Make
             outputs = model(inputs)
             #Cross entropy loss between the output of the model and the labels
             loss = criterion(outputs, labels)
@@ -320,8 +322,11 @@ def train_dp(trainloader, model, optimizer, epoch):
 
             count_vecs = defaultdict(int)
 
+
+
             #Iterate through the losses
             for pos, j in enumerate(losses):
+                #This means we run the following code for each of the losses (each of the test/training data)
                 j.backward(retain_graph=True)
 
                 #TODO find out what is going on here
@@ -336,7 +341,7 @@ def train_dp(trainloader, model, optimizer, epoch):
 
                 #Gradients are clipped by Amount S
                 #TODO S never gets passed down to funciton bad coding practice
-                total_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), S)
+                total_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), S) #clipping the total norm in a way
                 #25 for 30  0.8 and 19 for 70 0.27 so to
 
 
@@ -350,20 +355,35 @@ def train_dp(trainloader, model, optimizer, epoch):
                       if tensor.grad is not None:
                         new_grad = tensor.grad
                     #logger.info('new grad: ', new_grad)
-                        saved_var[tensor_name].add_(new_grad)
+                        saved_var[tensor_name].add_(new_grad) # so addiung the gradient for each tensor to tensor var after loss and then clip the gradient coming out the model
+
                 #Sets all gradients of model to zero
                 model.zero_grad()
+
+
+            # so at this point we havve the sum of the losses s per batch
+
+            #Important for understandig
+            #in previous step we took all tensor gradents and added them to saved var in the next step we are adding noise to them.
+
+
 
             for tensor_name, tensor in model.named_parameters():
                 if tensor.grad is not None:
                     #Add the gradient 
                     if device.type == 'cuda':
-                        saved_var[tensor_name].add_(torch.cuda.FloatTensor(tensor.grad.shape).normal_(0, sigma))
+                        #----- here we use the sigma to add noise... are we actually using any accountant at this point? mean zero and standard deviation sigma in this case
+                        # Fills :attr:`self` tensor with elements samples from the normal distribution parameterized by :attr:`mean` and :attr:`std`.
+                        saved_var[tensor_name].add_(torch.cuda.FloatTensor(tensor.grad.shape).normal_(0, sigma)) # This includes S since sigma = s*z
                     else:
                         saved_var[tensor_name].add_(torch.FloatTensor(tensor.grad.shape).normal_(0, sigma))
                     #Setting tensor gradient to saved gradient over number of microbatches
                     tensor.grad = saved_var[tensor_name] / num_microbatches #Does this mean it adds a TODO
             
+            
+
+
+
             #TODO not sure what is going on here might be how well the step size is doing
             if helper.params.get('count_norm_cosine_per_batch', False):
                 total_grad_vec = helper.get_grad_vec(model, device)
@@ -698,7 +718,7 @@ if __name__ == '__main__':
 #     document.querySelector("#top-toolbar > colab-connect-button").shadowRoot.querySelector("#connect").click() 
 # }
 # setInterval(ConnectButton,60000);
-#new thing https://we.tl/t-AkvcI6YfKR
+#new thing https://we.tl/t-SmBWF2fcHP
 #https://we.tl/t-HuPJj6RbEG
 #test file: https://we.tl/t-7SDA7EXiYg
 #find a way to automate/test this..

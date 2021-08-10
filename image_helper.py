@@ -395,6 +395,7 @@ class ImageHelper(Helper):
         self.dataset_size = len(self.train_dataset)
         logger.info(f"Length of CelebA dataset: {self.dataset_size}")
         
+        #Maybe the different shuffles make the total a different mix?
         self.train_loader = torch.utils.data.DataLoader(self.train_dataset,
                                                         batch_size=self.params['batch_size'],
                                                         shuffle=True,
@@ -403,7 +404,7 @@ class ImageHelper(Helper):
 
         self.test_loader = torch.utils.data.DataLoader(self.test_dataset,
                                                        batch_size=self.params['test_batch_size'],
-                                                       shuffle=False,
+                                                       shuffle=False, #TODO changed this to true for although what is the point...
                                                        num_workers=2)
                 
         self.labels = self.params['labels']
