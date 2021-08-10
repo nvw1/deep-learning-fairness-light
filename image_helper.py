@@ -15,10 +15,10 @@ import random
 from torchvision import datasets, transforms
 import numpy as np
 
-from utils.dif_dataset import DiFDataset
+
 from utils.celeba_dataset import CelebADataset
 
-from models.simple import SimpleNet
+from models.simple import SimpleNet #TODO check if needed
 from collections import OrderedDict
 
 POISONED_PARTICIPANT_POS = 0
@@ -289,74 +289,6 @@ class ImageHelper(Helper):
 
         return True
 
-
-    def load_dif_data(self):
-
-        mu_data = [0.485, 0.456, 0.406]
-        std_data = [0.229, 0.224, 0.225]
-        im_size = [80, 80]
-        crop_size = [64, 64]
-        brightness = 0.4
-        contrast = 0.4
-        saturation = 0.4
-        hue = 0.25
-
-        resize = transforms.Resize(im_size)
-        rotate = transforms.RandomRotation(degrees=30)
-        crop = transforms.RandomCrop(crop_size)
-        flip_aug = transforms.RandomHorizontalFlip()
-
-        normalize = transforms.Normalize(mean=mu_data, std=std_data)
-
-        center_crop = transforms.CenterCrop(crop_size)
-        transform_train = transforms.Compose([resize, rotate, crop,
-                                              flip_aug, transforms.ToTensor(),
-                                              normalize])
-
-        transform_test = transforms.Compose([resize, center_crop, transforms.ToTensor(), normalize])
-
-        self.train_dataset = DiFDataset(class_list=self.params['class_list'],
-                                        root_dir=self.params['root_dir'],
-                                        crop_list=self.params['crop_list'],
-                                        transform=transform_train)
-
-        self.test_dataset = DiFDataset(class_list=self.params['class_list'],
-                                       root_dir=self.params['root_dir'],
-                                       crop_list=self.params['crop_list'],
-                                       transform=transform_test)
-
-        indices_train = torch.load(self.params['indices_train'])
-        indices_test = torch.load(self.params['indices_test'])
-        self.labels = list()
-        combined_train = list()
-        combined_test = list()
-        for key, value in indices_train.items():
-            combined_train.extend(value)
-            self.labels.append(key)
-
-        self.labels = sorted(self.labels)
-        t_l = list()
-        for key, value in indices_test.items():
-            combined_test.extend(value)
-            t_l.append(key)
-        logger.info(f"Loaded dataset: labels: {self.labels}, len_train: {len(combined_train)}, len_test: {len(combined_test)} labels: {t_l}")
-
-        train_sampler = torch.utils.data.sampler.SubsetRandomSampler(indices=combined_train)
-        test_sampler = torch.utils.data.sampler.SubsetRandomSampler(indices=combined_test)
-
-        self.train_loader = torch.utils.data.DataLoader(self.train_dataset,
-                                                        batch_size=self.params['batch_size'],
-                                                        sampler=train_sampler,
-                                                        num_workers=2, drop_last=True)
-
-        self.test_loader = torch.utils.data.DataLoader(self.test_dataset,
-                                                       batch_size=self.params['test_batch_size'],
-                                                       sampler=test_sampler,
-                                                       num_workers=2)
-        self.dataset_size = len(combined_train)
-        self.label_skin_list = torch.load(self.params['label_skin_list'])
-
-        return True
 
     
     def load_celeba_data(self):
