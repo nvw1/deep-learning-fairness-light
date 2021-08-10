@@ -507,88 +507,145 @@ if __name__ == '__main__':
     logger.info(lr)
     logger.info(momentum)
 
-    #reseed(5)
-    if helper.params['dataset'] == 'inat':
-        helper.load_inat_data()
-        #helper.balance_loaders() todo reactivate
-    # elif helper.params['dataset'] == 'word':
-    #     helper.load_data()
-    # elif helper.params['dataset'] == 'dif':
-    #     helper.load_dif_data()
-    #     helper.get_unbalanced_faces()
-    #THE ONLY CASE WE ARE USING
-    elif helper.params['dataset'] == 'celeba':
-        helper.load_celeba_data()
-    #Nice to keep this if using other datasets
-    else:
-        helper.load_cifar_data(dataset=params['dataset'])
-        logger.info('before loader')
-        helper.create_loaders()
-        logger.info('after loader')
-        helper.sampler_per_class()
-        logger.info('after sampler')
-        helper.sampler_exponential_class(mu=mu, total_number=params['ds_size'], key_to_drop=params['key_to_drop'],
-                                        number_of_entries=params['number_of_entries'])
-        logger.info('after sampler expo')
-        helper.sampler_exponential_class_test(mu=mu, key_to_drop=params['key_to_drop'],
-              number_of_entries_test=params['number_of_entries_test'])
-        logger.info('after sampler test')
 
-    helper.compute_rdp() #Comput rdp ?TODO definintion residue dP
+    ### --------- Potential for big code cleanup...
 
-
-    #Set no of classes
-    if helper.params['dataset'] == 'cifar10':
-        num_classes = 10
-    # elif helper.params['dataset'] == 'cifar100':
-    #     num_classes = 100
+    # #reseed(5) #TODO part of process investigation
+    # if helper.params['dataset'] == 'celeba':
+    #     helper.load_celeba_data()  
+    #     #helper.balance_loaders() TODO reactivate?? dont think so in process check
+    # #In case we use inat
     # elif helper.params['dataset'] == 'inat':
+    #     helper.load_inat_data()
+    # #Nice to keep this if using other datasets
+    # else:
+    #     helper.load_cifar_data(dataset=params['dataset'])
+    #     logger.info('before loader')
+    #     helper.create_loaders()
+    #     logger.info('after loader')
+    #     helper.sampler_per_class()
+    #     logger.info('after sampler')
+    #     helper.sampler_exponential_class(mu=mu, total_number=params['ds_size'], key_to_drop=params['key_to_drop'],
+    #                                     number_of_entries=params['number_of_entries'])
+    #     logger.info('after sampler expo')
+    #     helper.sampler_exponential_class_test(mu=mu, key_to_drop=params['key_to_drop'],
+    #           number_of_entries_test=params['number_of_entries_test'])
+    #     logger.info('after sampler test')
+
+    # helper.compute_rdp() #Comput rdp ?TODO definintion residue dP
+
+
+    # #Set no of classes
+    # if helper.params['dataset'] == 'cifar10':
+    #     num_classes = 10
+    # # elif helper.params['dataset'] == 'cifar100':
+    # #     num_classes = 100
+    # # elif helper.params['dataset'] == 'inat':
+    # #     num_classes = len(helper.labels)
+    # #     logger.info('num class: ', num_classes)  
+    # # elif helper.params['dataset'] == 'dif':
+    # #     num_classes = len(helper.labels)
+    # # --- Again only need this realisticly
+    # elif helper.params['dataset'] == 'celeba':
     #     num_classes = len(helper.labels)
-    #     logger.info('num class: ', num_classes)  
-    # elif helper.params['dataset'] == 'dif':
-    #     num_classes = len(helper.labels)
-    # --- Again only need this realisticly
-    elif helper.params['dataset'] == 'celeba':
+    # else:
+    #     num_classes = 10
+
+
+
+    # #Set up the neural network
+
+
+    # #reseed(5)
+    # if helper.params['model'] == 'densenet':
+    #     net = DenseNet(num_classes=num_classes, depth=helper.params['densenet_depth'])
+    # # --- Using this one only
+    # elif helper.params['model'] == 'resnet':
+    #     logger.info(f'Model size: {num_classes}')
+    #     net = models.resnet18(num_classes=num_classes)
+    # elif helper.params['model'] == 'PretrainedRes': #actually only using this one only
+    #     net = models.resnet18(pretrained=True)
+    #     net.fc = nn.Linear(512, num_classes)
+    #     net = net.cuda()
+    # elif helper.params['model'] == 'FlexiNet':
+    #     net = FlexiNet(3, num_classes)
+    # elif helper.params['model'] == 'dif_inception':
+    #     net = inception_v3(pretrained=True, dif=True)
+    #     net.fc = nn.Linear(768, num_classes)
+    #     net.aux_logits = False
+    # elif helper.params['model'] == 'inception':
+    #     net = inception_v3(pretrained=True)
+    #     net.fc = nn.Linear(2048, num_classes)
+    #     net.aux_logits = False
+    #     #model = torch.nn.DataParallel(model).cuda()
+    # elif helper.params['model'] == 'mobilenet':
+    #     net = MobileNetV2(n_class=num_classes, input_size=64)
+    # elif helper.params['model'] == 'word':
+    #     net = RNNModel(rnn_type='LSTM', ntoken=helper.n_tokens,
+    #              ninp=helper.params['emsize'], nhid=helper.params['nhid'],
+    #              nlayers=helper.params['nlayers'],
+    #              dropout=helper.params['dropout'], tie_weights=helper.params['tied'])
+    # else:
+    #     net = Net()
+
+### ------ end of code saving
+
+
+ ###NEW code just for one model:
+    
+
+    #reseed(5) #TODO part of process investigation
+
+    #Set correct data loader
+    if helper.params['dataset'] == 'celeba':
+        helper.load_celeba_data()
+    else:
+        print("Dataset not supported yet.")
+        #Execute your data loader here.
+        #Write dataloader in /helper.py
+        #TODO end program the way it is usually being ended.
+        #TODO or say you have selected placehod
+        #TODO make one function to stop program? as needed often
+
+    helper.compute_rdp()
+
+    # Set number of classes
+    if helper.params['dataset'] == 'celeba':
         num_classes = len(helper.labels)
     else:
-        num_classes = 10
+        print("Dataset not supported yet.")
+        #Set your number of classes here
+        #TODO again find the correct way to end program
+    
+    #reseed(5) #TODO again check this in processcheck.
 
-
-
-    #Set up the neural network
-
-
-    #reseed(5)
-    if helper.params['model'] == 'densenet':
-        net = DenseNet(num_classes=num_classes, depth=helper.params['densenet_depth'])
-    # --- Using this one only
-    elif helper.params['model'] == 'resnet':
+    if helper.params['model'] == 'resnet':
         logger.info(f'Model size: {num_classes}')
         net = models.resnet18(num_classes=num_classes)
     elif helper.params['model'] == 'PretrainedRes': #actually only using this one only
         net = models.resnet18(pretrained=True)
         net.fc = nn.Linear(512, num_classes)
         net = net.cuda()
-    elif helper.params['model'] == 'FlexiNet':
-        net = FlexiNet(3, num_classes)
-    elif helper.params['model'] == 'dif_inception':
-        net = inception_v3(pretrained=True, dif=True)
-        net.fc = nn.Linear(768, num_classes)
-        net.aux_logits = False
-    elif helper.params['model'] == 'inception':
-        net = inception_v3(pretrained=True)
-        net.fc = nn.Linear(2048, num_classes)
-        net.aux_logits = False
-        #model = torch.nn.DataParallel(model).cuda()
-    elif helper.params['model'] == 'mobilenet':
-        net = MobileNetV2(n_class=num_classes, input_size=64)
-    elif helper.params['model'] == 'word':
-        net = RNNModel(rnn_type='LSTM', ntoken=helper.n_tokens,
-                 ninp=helper.params['emsize'], nhid=helper.params['nhid'],
-                 nlayers=helper.params['nlayers'],
-                 dropout=helper.params['dropout'], tie_weights=helper.params['tied'])
     else:
-        net = Net()
+        print("This model is not supported yet.")
+        # Add additional code here.
+        #TODO add unifrom execution
+        #TODO unifrom could have where this should be
+
+
+
+
+    
+
+    
+        
+
+
+
+
+
+
+
 
 
     #GPU set-up
@@ -596,6 +653,9 @@ if __name__ == '__main__':
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         logger.info(f"Let's use {torch.cuda.device_count()} GPUs!")
         net = nn.DataParallel(net)
+    #TODO figure out what happens if multi gpu is true and when it is and cpu is being used?
+    #TODO could potentially automate this?
+    #TODO test for robustness here ...
 
     net.to(device)
 
