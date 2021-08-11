@@ -21,6 +21,6 @@ inat_drop_proportional: True
 
 save_model: True
 dataset: celeba
-model: inception
+model: PretrainedRes
 densenet_depth: 100 #100
 scheduler: True

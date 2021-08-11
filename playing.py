@@ -38,7 +38,6 @@ import yaml
 from utils.text_load import *
 from models.resnet import Res, PretrainedRes
 from utils.utils import dict_html, create_table, plot_confusion_matrix
-from inception import *
 
 
 
