@@ -21,7 +21,6 @@ from utils.text_load import *
 from utils.utils import create_table, plot_confusion_matrix
 
 
-
 #Unused imports:
 import time
 import random
@@ -47,13 +46,6 @@ from multiprocessing import freeze_support
 #from text_helper import TextHelper
 
 
-
-
-
-
-
-
-
 #Allow threat freezing
 freeze_support()
 
@@ -69,7 +61,7 @@ logger = logging.getLogger('logger')
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 if torch.cuda.is_available():
-    print("OMG CUDA is available")
+    print("Good times: CUDA is available")
 #TODO probably make it stop here as otherwise would need more
 
 
@@ -467,6 +459,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='PPDL')
     parser.add_argument('--params', dest='params', default='utils/params_celeba.yaml')
     parser.add_argument('--name', dest='name', required=True)
+    parser.add_argument('--resumed_model','resumed_model',required=False)
 
     args = parser.parse_args()
     d = datetime.now().strftime('%b.%d_%H.%M.%S')
@@ -486,6 +479,7 @@ if __name__ == '__main__':
     logger.addHandler(logging.StreamHandler())
     logger.setLevel(logging.DEBUG)
     logger.info(f'current path: {helper.folder_path}')
+
 
     # --- setting up parameters ---
 
