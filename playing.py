@@ -1,59 +1,67 @@
-import logging
 #On local mac use base conda env and Python command
 
+import logging
+import argparse
+import torch
+import wandb
+import yaml
+
+
+import torchvision.models as models
+import torch.nn as nn
+import torch.optim as optim
+
+
+from datetime import datetime
+from collections import defaultdict
+from tensorboardX import SummaryWriter
+from tqdm import tqdm as tqdm #TODO Useless?
+from image_helper import ImageHelper
+from utils.text_load import *
+from utils.utils import create_table, plot_confusion_matrix
+
+
+
+#Unused imports:
+import time
+import random
+import json
+from scipy import ndimage
+import torchvision
+import torchvision.transforms as transforms
+import os
+from collections import OrderedDict
+from helper import Helper
+import numpy as np
+import torch.nn.functional as F
+from models.resnet import Res, PretrainedRes
+from utils.utils import dict_html
+from multiprocessing import freeze_support
+
+
+#Old imports
+#from models.mobilenet import MobileNetV2
+#from models.densenet import DenseNet
+#from models.simple import Net, FlexiNet, reseed
 #from models.word_model import RNNModel
 #from text_helper import TextHelper
 
 
-#TODO
-#Read through code line by line and decide what is being useful and what not
-#add doc strings
-
-logger = logging.getLogger('logger')
-
-import json
-from datetime import datetime
-import argparse
-from scipy import ndimage
-import torch
-import torchvision
-import os
-import torchvision.transforms as transforms
-from collections import defaultdict, OrderedDict
-from tensorboardX import SummaryWriter
-import torchvision.models as models
-#from models.mobilenet import MobileNetV2
-from helper import Helper
-from image_helper import ImageHelper
-#from models.densenet import DenseNet
-#from models.simple import Net, FlexiNet, reseed
-import numpy as np
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-from tqdm import tqdm as tqdm
-import time
-import random
-import yaml
-from utils.text_load import *
-from models.resnet import Res, PretrainedRes
-from utils.utils import dict_html, create_table, plot_confusion_matrix
 
 
 
-#Added after the fact
-from multiprocessing import freeze_support
+
+
+
+
+#Allow threat freezing
 freeze_support()
 
 # Add wandb logging which is synced with the Tensorboard
-import wandb 
 wandb.init(project="dfl-light", entity="nvw")
 wandb.init(sync_tensorboard=True)
 
-
-
-# Model wand setup 
-# import wandb
+logger = logging.getLogger('logger')
 
 
 
@@ -62,6 +70,8 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 if torch.cuda.is_available():
     print("OMG CUDA is available")
+#TODO probably make it stop here as otherwise would need more
+
 
 layout = {'cosine': {
     'cosine': ['Multiline', ['cosine/0',
