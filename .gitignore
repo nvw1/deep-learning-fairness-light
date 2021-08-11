@@ -2,3 +2,4 @@
 *.log
 wandb/run*
 wandb/*
+**/__pycache__/
