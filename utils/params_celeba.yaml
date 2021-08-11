@@ -18,11 +18,11 @@ save_model: True
 dataset: celeba
 model: PretrainedRes
 
-image_dir: /content/gdrive/MyDrive/data/celeba/img_align_celeba/img_align_celeba/ #Changed for local env on MacBook soemtimes need double folder structure as comes out of the zip
+image_dir: /content/celeba/img_align_celeba/img_align_celeba/ #Changed for local env on MacBook soemtimes need double folder structure as comes out of the zip
 #local /Users/nvw3/Downloads/celeba/img_align_celeba/img_align_celeba/
 #/workspace/celeba/img_align_celeba/img_align_celeba/ for on jupyter
 #Change to /content/ for google drive
-attr_path: /content/gdrive/MyDrive/data/celeba/imbalanced_attr/98i_female.csv #Changed for local env on MacBook
+attr_path: /content/celeba/imbalanced_attr/98i_female.csv #Changed for local env on MacBook
 #local /Users/nvw3/Downloads/celeba/img_align_celeba/img_align_celeba/
 #/workspace/celeba/img_align_celeba/img_align_celeba/ for on jupyter
 selected_attr: Smiling
