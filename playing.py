@@ -459,7 +459,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='PPDL')
     parser.add_argument('--params', dest='params', default='utils/params_celeba.yaml')
     parser.add_argument('--name', dest='name', required=True)
-    parser.add_argument('--resumed_model','resumed_model',required=False)
+    parser.add_argument('--resumed_model',dest='resumed_model',required=False)
 
     args = parser.parse_args()
     d = datetime.now().strftime('%b.%d_%H.%M.%S')
