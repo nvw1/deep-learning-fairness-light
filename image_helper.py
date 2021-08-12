@@ -3,6 +3,7 @@ logger = logging.getLogger('logger')
 
 import torch
 import torch.utils.data
+import os
 
 from helper import Helper
 from torchvision import  transforms
@@ -14,7 +15,7 @@ from utils.celeba_dataset import CelebADataset
 #from torchvision import datasets
 # import random
 # import torchvision
-# import os
+
 
 
 #Old TODO delete
@@ -37,6 +38,7 @@ class ImageHelper(Helper):
         
         #TODO maybe not even needed? since instant use in the files?
         #TODO wouldn't it be cleaner to initiallize it at the beginning and then just pass it rather then lookup?
+        #TODO is that truly better given it is used some where else
         image_dir = ''
         attr_path = ''
         selected_attrs = ''
@@ -223,65 +225,16 @@ class ImageHelper(Helper):
 
 
 #TODO Might be usefull but will have to use it 
-    # def get_unbalanced_faces(self):
-    #     self.unbalanced_loaders = dict()
-    #     files = os.listdir(self.params['folder_per_class'])
-    #     # logger.info(files)
-    #     for x in sorted(files):
-    #         indices = torch.load(f"{self.params['folder_per_class']}/{x}")
-    #         # logger.info(f'unbalanced: {x}, {len(indices)}')
-    #         sampler = torch.utils.data.sampler.SubsetRandomSampler(indices=indices)
-    #         self.unbalanced_loaders[x] = torch.utils.data.DataLoader(self.test_dataset,
-    #                                                     batch_size=self.params['test_batch_size'],
-    #                                                     sampler=sampler,
-    #                                                     num_workers=2, drop_last=True)
-    #     return True
-
-
-    
-
-    
-    
-    # def load_jigsaw(self):
-    #     import pickle
-    #     import pandas as pd
-
-    #     max_features = 50000
-
-    #     train = pd.read_csv('data/jigsaw/processed_train.csv')
-    #     test = pd.read_csv('data/jigsaw/processed_test.csv')
-    #     # after processing some of the texts are emply
-    #     train['comment_text'] = train['comment_text'].fillna('')
-    #     test['comment_text'] = test['comment_text'].fillna('')
-    #     with open(f'data/jigsaw/tokenizer_{max_features}.pickle', 'rb') as f:
-    #         tokenizer = pickle.load(f)
-
-    #     X_train = tokenizer.texts_to_sequences(train['comment_text'])
-    #     X_test = tokenizer.texts_to_sequences(test['comment_text'])
-    #     x_train_lens = [len(i) for i in X_train]
-    #     x_test_lens = [len(i) for i in X_test]
-
-    # def create_model(self):
-    #     return
-
-    # def plot_acc_list(self, acc_dict, epoch, name, accuracy):
-    #     import matplotlib
-    #     matplotlib.use('AGG')
-    #     import matplotlib.pyplot as plt
-
-    #     acc_list = sorted(acc_dict.items(), key=lambda t: t[1])
-    #     sub_lists = list()
-    #     names = list()
-    #     for x, y in acc_list:
-    #         sub_lists.append(y)
-    #         names.append(str(x))
-    #     fig, ax = plt.subplots(1, figsize=(40, 10))
-    #     ax.plot(names, sub_lists)
-    #     ax.set_ylim(0, 100)
-    #     ax.set_xlabel('Labels')
-    #     ax.set_ylabel('Accuracy')
-    #     fig.autofmt_xdate()
-    #     plt.title(f'Accuracy plots. Epoch {epoch}. Main accuracy: {accuracy}')
-    #     plt.savefig(f'{self.folder_path}/figure__{name}_{epoch}.pdf', format='pdf')
-
-    #     return fig
+    def get_unbalanced_faces(self):
+        self.unbalanced_loaders = dict()
+        files = os.listdir(self.params['folder_per_class'])
+        # logger.info(files)
+        for x in sorted(files):
+            indices = torch.load(f"{self.params['folder_per_class']}/{x}")
+            # logger.info(f'unbalanced: {x}, {len(indices)}')
+            sampler = torch.utils.data.sampler.SubsetRandomSampler(indices=indices)
+            self.unbalanced_loaders[x] = torch.utils.data.DataLoader(self.test_dataset,
+                                                        batch_size=self.params['test_batch_size'],
+                                                        sampler=sampler,
+                                                        num_workers=2, drop_last=True)
+        return True
