@@ -9,7 +9,7 @@ S: 5
 z: 1.5
 mu: 0.9
 dp: True #False
-epochs: 60
+epochs: 2
 save_on_epochs: [10, 20, 40, 60]
 optimizer: Adam
 scheduler: False
@@ -18,14 +18,16 @@ save_model: True
 dataset: celeba
 model: PretrainedRes
 
-image_dir: /content/celeba/img_align_celeba/img_align_celeba/ #Changed for local env on MacBook soemtimes need double folder structure as comes out of the zip
+image_dir: /content/celeba/img_align_celeba/img_align_celeba/
 #local /Users/nvw3/Downloads/celeba/img_align_celeba/img_align_celeba/
 #/workspace/celeba/img_align_celeba/img_align_celeba/ for on jupyter
 #Change to /content/ for google drive
-attr_path: /content/celeba/imbalanced_attr/98i_female.csv #Changed for local env on MacBook
+attr_path: /content/celeba/imbalanced_attr/98i_female.csv
 #local /Users/nvw3/Downloads/celeba/img_align_celeba/img_align_celeba/
 #/workspace/celeba/img_align_celeba/img_align_celeba/ for on jupyter
 selected_attr: Smiling
 protected_attr: Male
 labels: [0, 1]
 multi_gpu: False #Make sure to update this for remote machines
+
+#U = unique to this configuration
