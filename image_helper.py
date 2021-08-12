@@ -1,7 +1,6 @@
 import logging
 logger = logging.getLogger('logger')
 
-import torch
 import torch.utils.data
 
 
@@ -23,15 +22,8 @@ class ImageHelper(Helper):
         """Build and return a data loader."""
         self.name = self.params['name']
         
-        #TODO maybe not even needed? since instant use in the files?
-        #TODO wouldn't it be cleaner to initiallize it at the beginning and then just pass it rather then lookup?
-        #TODO is that truly better given it is used some where else
-        image_dir = ''
-        attr_path = ''
-        selected_attrs = ''
-        
-        crop_size = 178 #178 #TODO maybe lower image resolution?
-        image_size = 128 #128 #TODO pixels find me
+        crop_size = 178 #178 
+        image_size = 128 #128 aka pixel
         
         flip = transforms.RandomHorizontalFlip()
         crop = transforms.CenterCrop(crop_size)
@@ -58,7 +50,7 @@ class ImageHelper(Helper):
         self.dataset_size = len(self.train_dataset)
         logger.info(f"Length of CelebA dataset: {self.dataset_size}")
         
-        #Maybe the different shuffles make the total a different mix?
+        #TODO Maybe the different shuffles make the total a different mix?
         self.train_loader = torch.utils.data.DataLoader(self.train_dataset,
                                                         batch_size=self.params['batch_size'],
                                                         shuffle=True,
