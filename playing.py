@@ -17,7 +17,6 @@ from collections import defaultdict
 from tensorboardX import SummaryWriter
 from tqdm import tqdm as tqdm #TODO Useless?
 from image_helper import ImageHelper
-from utils.text_load import *
 from utils.utils import create_table, plot_confusion_matrix
 
 
@@ -36,14 +35,6 @@ import torch.nn.functional as F
 from models.resnet import Res, PretrainedRes
 from utils.utils import dict_html
 from multiprocessing import freeze_support
-
-
-#Old imports
-#from models.mobilenet import MobileNetV2
-#from models.densenet import DenseNet
-#from models.simple import Net, FlexiNet, reseed
-#from models.word_model import RNNModel
-#from text_helper import TextHelper
 
 
 #Allow threat freezing
