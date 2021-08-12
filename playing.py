@@ -464,6 +464,9 @@ if __name__ == '__main__':
         print("RIP text helper")
     else:
         helper = ImageHelper(current_time=d, params=params, name=args.name)
+        #TESTING:
+        helper.get_unbalanced_faces()
+
 
 
     logger.addHandler(logging.FileHandler(filename=f'{helper.folder_path}/log.txt'))
