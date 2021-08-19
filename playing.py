@@ -21,7 +21,7 @@ from utils.utils import create_table, plot_confusion_matrix
 from multiprocessing import freeze_support
 
 # This can be used to have the same random state for consistency
-from simple import reseed
+from models.simple import reseed
 reseed(5)
 
 #Unused imports:
