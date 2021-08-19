@@ -1,14 +1,14 @@
 import numpy as np
 import random
-import torch
-from torch.autograd import Variable
 from torch.utils.data.sampler import Sampler
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import re
 import itertools
 import matplotlib
+
 matplotlib.use('AGG')
+
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""

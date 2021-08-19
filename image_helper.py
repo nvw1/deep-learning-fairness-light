@@ -9,9 +9,6 @@ from torchvision import  transforms
 from utils.celeba_dataset import CelebADataset
 
 
-POISONED_PARTICIPANT_POS = 0
-
-
 class ImageHelper(Helper):
 
     def poison(self):
@@ -56,6 +53,8 @@ class ImageHelper(Helper):
         logger.info(f"Length of CelebA testing dataset: {self.dataset_size}")
         
         #TODO Maybe the different shuffles make the total a different mix?
+        #Trace1
+
 
 
         self.train_loader = torch.utils.data.DataLoader(self.train_dataset,

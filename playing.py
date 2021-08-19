@@ -1,5 +1,3 @@
-#On local mac use base conda env and Python command
-
 import logging
 import argparse
 import torch
@@ -20,36 +18,20 @@ from image_helper import ImageHelper
 from utils.utils import create_table, plot_confusion_matrix
 from multiprocessing import freeze_support
 
+
 # This can be used to have the same random state for consistency
 from models.simple import reseed
 reseed(5)
-
-#Unused imports:
-# import time
-# import random
-# import json
-# from scipy import ndimage
-# import torchvision
-# import torchvision.transforms as transforms
-# import os
-# from collections import OrderedDict
-# from helper import Helper
-# import numpy as np
-# import torch.nn.functional as F
-# from models.resnet import Res, PretrainedRes
-# from utils.utils import dict_html
-
 
 
 #Allow threat freezing
 freeze_support()
 
-# Add wandb logging which is synced with the Tensorboard
+# Add wandb logging which is synced with the Tensorboard EDIT
 wandb.init(project="dfl-light", entity="nvw")
 wandb.init(sync_tensorboard=True)
 
 logger = logging.getLogger('logger')
-
 
 
 #Setting up device
@@ -449,6 +431,17 @@ def train(trainloader, model, optimizer, epoch):
                 running_loss = 0.0
             pbar.update(1)
 
+
+
+
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
     freeze_support()
     parser = argparse.ArgumentParser(description='PPDL')
@@ -543,7 +536,9 @@ if __name__ == '__main__':
     elif helper.params['model'] == 'PretrainedRes': #actually only using this one only
         net = models.resnet18(pretrained=True)
         net.fc = nn.Linear(512, num_classes)
-        net = net.cuda()
+        ###TODO testing new code here:
+        if torch.cuda.is_available():
+            net = net.cuda()
     else:
         print("This model is not supported yet.")
         # Add additional code here.
