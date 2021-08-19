@@ -1,9 +1,14 @@
-from torch.utils.data import Dataset, DataLoader
-from torchvision.datasets import ImageFolder
-from PIL import Image
-import torch
 import os
 import random
+
+from torch.utils.data import Dataset
+from PIL import Image
+
+#TODO Old imports:
+from torch.utils.data import DataLoader
+from torchvision.datasets import ImageFolder
+import torch
+
 
 
 class CelebADataset(Dataset):
@@ -29,8 +34,10 @@ class CelebADataset(Dataset):
             self.num_images = len(self.test_dataset)
 
     def preprocess(self):
-        """Preprocess the CelebA attribute file."""
-        # Or we could change the attribute stuff beforehand
+        """Preprocess the CelebA attribute file.
+            This precossing version picks entries for training and testing set at random
+        
+        """
 
         lines = [line.rstrip() for line in open(self.attr_path, 'r')]
         all_attr_names = lines[0].split(',')
@@ -43,7 +50,7 @@ class CelebADataset(Dataset):
         random.shuffle(lines) # TODO This combined with further down leads to unfair splits... should split the data equally for both... TODO
         # so here we actually need to pick the equal amount from each group just to be representative...
         # Best way is...
-        # Way of approaching split lines into two take from each and then put back to gether and then start shuffeling
+        # Way of approaching split lines into two take from each and then put back together and then start shuffeling
         for i, line in enumerate(lines):
             split = line.split(',')
             filename = split[0]
@@ -71,7 +78,10 @@ class CelebADataset(Dataset):
         print('Finished preprocessing the CelebA dataset...')
     
     def preprocessEqual(self):
-        """Preprocess the CelebA attribute file."""
+        """Preprocess the CelebA attribute file.
+            This preprocessing method ensures the ratio of proteced and unprotected attributes in the test set reflect the ratios of the data set as a whole.
+        
+        """
         print('Entering equal preprocessing this is still in alpha. Change setting in celeba_dataset.py')
         lines = [line.rstrip() for line in open(self.attr_path, 'r')]
         all_attr_names = lines[0].split(',')
@@ -102,6 +112,7 @@ class CelebADataset(Dataset):
         
         
         ratio = classOneMale/classTwoFemale
+        print("The ratio male/female for this run  is:",ratio)
 
         #As the training set will be 20% of data we re do this here to ensure the right min amount later
         maleMin = classOneMale/5

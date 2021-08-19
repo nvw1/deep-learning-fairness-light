@@ -30,7 +30,10 @@ class ImageHelper(Helper):
         resize = transforms.Resize(image_size)
         normalize = transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
         
+        #Cropping flipping and resizing image
         transform_train = transforms.Compose([flip, crop, resize, transforms.ToTensor(), normalize])
+        #same as above but no flipping as it is the testing set
+        #shoudl this be flipped aswell? TODO
         transform_test = transforms.Compose([crop, resize, transforms.ToTensor(), normalize])
 
         self.train_dataset = CelebADataset(image_dir=self.params['image_dir'],
@@ -49,13 +52,17 @@ class ImageHelper(Helper):
         
         self.dataset_size = len(self.train_dataset)
         logger.info(f"Length of CelebA dataset: {self.dataset_size}")
+        self.dataset_size = len(self.test_dataset)
+        logger.info(f"Length of CelebA testing dataset: {self.dataset_size}")
         
         #TODO Maybe the different shuffles make the total a different mix?
+
+
         self.train_loader = torch.utils.data.DataLoader(self.train_dataset,
                                                         batch_size=self.params['batch_size'],
                                                         shuffle=True,
                                                         num_workers=2,
-                                                        drop_last=True)
+                                                        drop_last=True) #Drops last batch if not divisible by batch size
 
         self.test_loader = torch.utils.data.DataLoader(self.test_dataset,
                                                         batch_size=self.params['test_batch_size'],

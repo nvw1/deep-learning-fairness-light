@@ -14,13 +14,16 @@ optimizer: Adam
 mu: 0.9
 ds_size: 600 #60000
 
-key_to_drop: 5 #5
-number_of_entries: 500 #500
-number_of_entries_test: 1000 #1000
-inat_drop_proportional: True
+key_to_drop: 5 #5 U
+number_of_entries: 500 #500 U
+number_of_entries_test: 1000 #1000 U
+inat_drop_proportional: True #U
 
 save_model: True
 dataset: celeba
 model: PretrainedRes
 densenet_depth: 100 #100
 scheduler: True
+
+
+# U = unique to this config

@@ -1,48 +1,50 @@
-## Neither Private Nor Fair: Impact of Data Imbalance on Utility and Fairness in Differential Privacy (CCS'20 Privacy-Preserving ML in Practice Workshop)
-The paper discusses how Differential Privacy (specifically DPSGD from [1]) impacts model performance for underrepresented groups. 
-We aim to study how different levels of imbalance in the data affect the accuracy and the fairness of the decisions made by the model, given different levels of privacy. We demonstrate how even small imbalances and loose privacy guarantees can cause disparate impacts.
+
+## Impact of Data Imbalance on Fairness in Privacy Preserving Deep Learning
+This final year project investigates the impact of model performance under small changes in the imbalance of minorities in the dataset and explores the resulting trends. 
+
+We aim to study why there are unexplained fluctuations in previously collected data and aim to help datascientist use measures of fairness in a reasonable way.
+
+
+
 
 ### Usage
-Configure environment by running: `pip install -r requirements.txt` <br />
-We use Python3.7 and GPU Nvidia TitanX. <br />
-File `playing.py` serves as the entry point for the code. It uses `utils/params.yaml` to set parameters from the paper and builds a graph on Tensorboard. <br />
-For Sentiment prediction we use `playing_nlp.py`.
+On your colab project (or linux machine with ML image) run the `startup.ipynb` file<br />
+We use Python 3.7 and GPU Nvidia V100. <br />
+
+The startup file will set up the enviornment and download the code from the repository [repo] (https://github.com/nvw1/deep-learning-fairness-light) and will download and unzip the pre-processed Dataset from a google cloud services bucket into its parents directory.<br />
+
+Ensure to now edit the wandb API key to your key (accessible from the wandb website) for recording results and to alter the desired parameters in the `utils/params_celeba.yaml` file to create your custom experiment.
+
+Once this is completed it will utilise the configuration stored in `utils/params_celeba.yaml` to run execute the program through the entry file `running.py`.
+The results will be accessible in the console as well as in the connected wandb account dashboard with its respective Tensorboard graphs. <br />
+
 
 
 ### Datasets
-1. MNIST (part of PyTorch)
-2. Diversity in Faces (obtained from IBM [here](https://www.research.ibm.com/artificial-intelligence/trusted-ai/diversity-in-faces/#access))
-3. iNaturalist (download from [here](https://github.com/visipedia/inat_comp))
-4. UTKFace (from [here](http://aicip.eecs.utk.edu/wiki/UTKFace))
-5. AAE Twitter corpus (from [here](http://slanglab.cs.umass.edu/TwitterAAE/))
+1. CelebA Datsset (from [here] (https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html))
 
 ### Code Sources
 We use `compute_dp_sgd_privacy.py` copied from public [repo](https://github.com/tensorflow/privacy).
 
-DP-FedAvg implementation is taken from public [repo](https://github.com/ebagdasa/backdoor_federated_learning).  
+DP-FedAvg implementation is taken from public [repo](https://github.com/ebagdasa/backdoor_federated_learning).
+
+Implementation of playing.py execution is based on [repo] (https://github.com/FarrandTom/deep-learning-fairness) and papers following below.
 
 Implementation of DPSGD is based on TF Privacy [repo](https://github.com/tensorflow/privacy) and papers:
 
 ### Paper
+https://arxiv.org/pdf/2009.06389v3.pdf
 https://arxiv.org/pdf/2009.06389.pdf
 
-### Citation
-`@article{farrand2020neither,
-  title={Neither Private Nor Fair: Impact of Data Imbalance on Utility and Fairness in Differential Privacy},
-  author={Farrand, Tom and Mireshghallah, Fatemehsadat and Singh, Sahib and Trask, Andrew},
-  journal={arXiv preprint arXiv:2009.06389},
-  year={2020}
-}`
+
 
 =======
 
 
 
+# Requirements:
+Gmail account for google colab and wandb for full funcitonality.
+Subscription to colab pro or pro + may be required to run larger experiments as colab may time out early if you leave the page or are inactive.
 
-keeping colab running with:
-
-function ConnectButton(){
-    console.log("Connect pushed"); 
-    document.querySelector("#top-toolbar > colab-connect-button").shadowRoot.querySelector("#connect").click() 
-}
-setInterval(ConnectButton,60000);
+Otherwise a ML docker image with a CUDA compatible GPU , a minimum of 50GB disk storage and 16GB RAM.
+Time taken: 5h with a NVIDIA V100 GPU 16GB (5120 CUDA cores) and 100 MBit/s internet connection.

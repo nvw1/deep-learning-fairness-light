@@ -24,7 +24,7 @@ class PretrainedRes(SimpleNet):
         self.res = models.resnet101(pretrained=True)
         self.fc1 = nn.Linear(1000, 100)
         self.fc2 = nn.Linear(100, no_classes)
-        #making custom first two layers
+        # Making custom first two layers
 
 
     def forward(self, x):

@@ -18,23 +18,27 @@ from tensorboardX import SummaryWriter
 from tqdm import tqdm as tqdm #TODO Useless?
 from image_helper import ImageHelper
 from utils.utils import create_table, plot_confusion_matrix
+from multiprocessing import freeze_support
 
+# This can be used to have the same random state for consistency
+from simple import reseed
+reseed(5)
 
 #Unused imports:
-import time
-import random
-import json
-from scipy import ndimage
-import torchvision
-import torchvision.transforms as transforms
-import os
-from collections import OrderedDict
-from helper import Helper
-import numpy as np
-import torch.nn.functional as F
-from models.resnet import Res, PretrainedRes
-from utils.utils import dict_html
-from multiprocessing import freeze_support
+# import time
+# import random
+# import json
+# from scipy import ndimage
+# import torchvision
+# import torchvision.transforms as transforms
+# import os
+# from collections import OrderedDict
+# from helper import Helper
+# import numpy as np
+# import torch.nn.functional as F
+# from models.resnet import Res, PretrainedRes
+# from utils.utils import dict_html
+
 
 
 #Allow threat freezing
@@ -547,21 +551,6 @@ if __name__ == '__main__':
         #TODO unifrom could have where this should be
 
 
-
-
-    
-
-    
-        
-
-
-
-
-
-
-
-
-
     #GPU set-up
     if helper.params.get('multi_gpu', False):
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -585,7 +574,6 @@ if __name__ == '__main__':
                     f" {helper.params['lr']} and current epoch is {helper.start_epoch}")
     else:
         helper.start_epoch = 1
-    
 
 
     logger.info(f'Total number of params for model {helper.params["model"]}: {sum(p.numel() for p in net.parameters() if p.requires_grad)}')
@@ -604,7 +592,7 @@ if __name__ == '__main__':
     elif helper.params['optimizer'] == 'Adam':
         optimizer = optim.Adam(net.parameters(), lr=lr, weight_decay=decay)
     else:
-        raise Exception('Specify `optimizer` in params.yaml.')
+        raise Exception('Specify `optimizer` in params.yaml.') #TODO other errors should be handled this way.../ else cases
 
     
     #Set learning rate to specific changing over milestones
@@ -621,7 +609,7 @@ if __name__ == '__main__':
     # acc = test(net, epoch, "accuracy", helper.test_loader, vis=True) #seems like there is no test loader in helper
 
     #Depending on if dp or not train model for each epoch and at the end save the accuaray.
-    for epoch in range(helper.start_epoch, epochs):  # loop over the dataset multiple times
+    for epoch in range(helper.start_epoch, epochs):  # loop over the dataset multiple times #TODO star epoch not defined... check doing the right thing
         if dp:
             train_dp(helper.train_loader, net, optimizer, epoch)
         else:
@@ -632,180 +620,3 @@ if __name__ == '__main__':
         
         helper.save_model(net, epoch, main_acc)
     logger.info(f"Finished training for model: {helper.current_time}. Folder: {helper.folder_path}")
-
-
-
-
-#GOOD behavior of reading someones code.. just read from the top down looking up each owrk making comments for ones own...
-# Batch = evaluates all examples in set and then updates model -> that is why we divide the gradient
-#ONe batch per epoch . Multiple data
-
-#Note: we are using cross entropy loss
-#NOte: TODO there is an option to switch to pretrained resnet should we be doing that? Is that what the paper did?
-
-
-#Should there be a resume model option to be used in the paramters
-#TODO: research
-#what cross entropy and why are we using cross entropy reduction
-
-
-
-
-
-#On the docker file which vast.ai is do:
-# tqdm
-# pytorch
-# torchvision
-# pyyaml
-# tensorboardX
-# scikit-learn
-# matplotlib
-
-# All i had to do was pip install these
-# matplotlib
-# scipy
-# tensorboardX
-# sklearn
-
-# apt-get update
-# apt-get -y install curl
-#had to install wget
-#and absl-py
-
-
-
-
-#To keep colab running:
-# function ConnectButton(){
-#     console.log("Connect pushed"); 
-#     document.querySelector("#top-toolbar > colab-connect-button").shadowRoot.querySelector("#connect").click() 
-# }
-# setInterval(ConnectButton,60000);
-
-
-#v
-#Now we need to figure out how to mount the data properly
-#new thing3 now with further data splits: https://we.tl/t-e3fNm5XDCm
-# Code to keep colab alive:
-# function ConnectButton(){
-#     console.log("Connect pushed"); 
-#     document.querySelector("#top-toolbar > colab-connect-button").shadowRoot.querySelector("#connect").click() 
-# }
-# setInterval(ConnectButton,60000);
-#new thing https://we.tl/t-SmBWF2fcHP
-#https://we.tl/t-HuPJj6RbEG
-#test file: https://we.tl/t-7SDA7EXiYg
-#find a way to automate/test this..
-#Idea:
-# save it somewhere like in that file storage .
-# make script to create file
-# change files always locally upload for now
-# then download/mount the file
-
-
-#later make sure wandb works that would be a nice way to get back results
-
-
-#curl 'https://download.wetransfer.com//eu2/cb20949fa84b01f9ef325c3b8107275920210220152757/fb5d9d03be35ab2c8954da04dc3bb40928d3846c/celeba2.zip?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTM5MjI4MjAsInVuaXF1ZSI6ImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTciLCJmaWxlbmFtZSI6ImNlbGViYTIuemlwIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvNjJmMDhhNDZiODI1MTg0M2MwZmQ1MTQ0Y2IyOGQ5Zjc2ZWMzM2NhM2EzMjY3OWQxNWJlZDkwNmQzNWY5Y2IzZjAwNDA0YTZjNDQyYWNkNTQ2MjMzZTciLCJmaW5nZXJwcmludCI6ImZiNWQ5ZDAzYmUzNWFiMmM4OTU0ZGEwNGRjM2JiNDA5MjhkMzg0NmMiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcImNiMjA5NDlmYTg0YjAxZjllZjMyNWMzYjgxMDcyNzU5MjAyMTAyMjAxNTI3NTdcIixcImRvd25sb2FkX2lkXCI6MTE1MDE3OTQ1MjV9fSJ9.cWKm1oI0tYE7TGjZ59T33AKQZXING5GsV-QjF1tk3cg' --location --output my.pdf
-
-#https://we.tl/t-ltAJxsygom
-#curl 'https://download.wetransfer.com//eugv/f95cb09a85e936420a672eca028f204e20210312132750/eeeba8927a3c06897d35f2308606d83e34d4c82a/thisphoto1.jpeg.zip?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTU1NTY1NDgsInVuaXF1ZSI6ImY5NWNiMDlhODVlOTM2NDIwYTY3MmVjYTAyOGYyMDRlMjAyMTAzMTIxMzI3NTAiLCJmaWxlbmFtZSI6InRoaXNwaG90bzEuanBlZy56aXAiLCJ3YXliaWxsX3VybCI6Imh0dHA6Ly9wcm9kdWN0aW9uLmJhY2tlbmQuc2VydmljZS5ldS13ZXN0LTEud3Q6OTI5Mi93YXliaWxsL3YxL3Nhcmthci81YTM1YjNhNWZlMDAzYzQxMDU3YjhlNjNjNmQzZjNlMzEwMzI4ZTk0ZDlkZjQyMDBkOGRiODQwMTU2YzY0NjFjYzRiNThkZmUwMWFlYTU1MTVkMzFlNCIsImZpbmdlcnByaW50IjoiZWVlYmE4OTI3YTNjMDY4OTdkMzVmMjMwODYwNmQ4M2UzNGQ0YzgyYSIsImNhbGxiYWNrIjoie1wiZm9ybWRhdGFcIjp7XCJhY3Rpb25cIjpcImh0dHA6Ly9wcm9kdWN0aW9uLmZyb250ZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjMwMDAvd2ViaG9va3MvYmFja2VuZFwifSxcImZvcm1cIjp7XCJ0cmFuc2Zlcl9pZFwiOlwiZjk1Y2IwOWE4NWU5MzY0MjBhNjcyZWNhMDI4ZjIwNGUyMDIxMDMxMjEzMjc1MFwiLFwiZG93bmxvYWRfaWRcIjoxMTY1MTMyMDExMH19In0._G3BfQShIhvCz6VburFvMMfWLe3BF3qcvVGYPrJ66no' --location --output my.jpeg
-
-
-#This is the real deal
-#curl 'https://download.wetransfer.com//eugv/84194f949fbb017de4e9eccb78e8062920210312132653/fb5d9d03be35ab2c8954da04dc3bb40928d3846c/celeba2.zip?cf=y&token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTU1NTY3MjAsInVuaXF1ZSI6Ijg0MTk0Zjk0OWZiYjAxN2RlNGU5ZWNjYjc4ZTgwNjI5MjAyMTAzMTIxMzI2NTMiLCJmaWxlbmFtZSI6ImNlbGViYTIuemlwIiwid2F5YmlsbF91cmwiOiJodHRwOi8vcHJvZHVjdGlvbi5iYWNrZW5kLnNlcnZpY2UuZXUtd2VzdC0xLnd0OjkyOTIvd2F5YmlsbC92MS9zYXJrYXIvNTQ0ZGZhNmMwODhhYjcwMWZmN2YxY2NkZjAyZTNmMWZmMjIyZmI4NzAwYmVmOWNjNTU1NTg4MjJhMzgwNjIxNzcxMDNlYTNhZWYxNTgxYTFlZjkxMzYiLCJmaW5nZXJwcmludCI6ImZiNWQ5ZDAzYmUzNWFiMmM4OTU0ZGEwNGRjM2JiNDA5MjhkMzg0NmMiLCJjYWxsYmFjayI6IntcImZvcm1kYXRhXCI6e1wiYWN0aW9uXCI6XCJodHRwOi8vcHJvZHVjdGlvbi5mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53dDozMDAwL3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcIjg0MTk0Zjk0OWZiYjAxN2RlNGU5ZWNjYjc4ZTgwNjI5MjAyMTAzMTIxMzI2NTNcIixcImRvd25sb2FkX2lkXCI6MTE2NTEzNDM0Mzh9fSJ9.uMOZKv9GQ5_DITFXk1XtG9Z-I_NzKtafTHJ6nk7ifI8' --location --output celeba2.zip
-#could be that it is better
-#should try that curl comman to maybe save time
-
-#Somehow not using gpu? why?
-
-
-#
-
-
-#
-#got the param file
-
-#TODO put the scripts together maybe possible to automate everything just need to uplaod on python scri
-#needed step is how to download the repo from github but thats about it
-#would be nice to have the setup completly outomated and only needing to start the file
-#also need to make sure it works with wandb
-
-#Looks like full send dp on a 3090 is taknig 36 minutes for one epoch...
-
-#Price calculator
-#3090 16 32 44.7 31.9 0.885/hr usage 80% roughly 6 gig
-#36:28 per full send...
-# 31.86 so that is 1.65/hour epochs per hour and each hour costs 0.885 0.53p per epoch thus 31.8£ 310£
-#need 40
-
-
-
-
-#
-#2x Tesla V100 26 193 31.3 tflops 1.447/hr at 64 amnd 60 % usage each and 4gigabite each... oh i forgot to change the requirements didnt i 
-#17 ish buit that was on half batch half minibatch and half pixel size at least from the data loader
-# 33:40 per full send ish
-# actually 6 gig each aswell and 85% /+- 220 W per gpu usage
-# 48.3298 lower better 1.8 per hour 0.80p per epoch 48£ Thus making all 10 datapoints would cost 480£ for all ten but once data is prepped I can get the results within  3 days.
-#
-#with scheduler on a little less than 34
-
-
-
-
-
-#4x 3090 50% only 2gig each looks like 13 min per epoch...
-#price tag 4.55
-#oh no slowing down massively about 17 min per epoch... so total time 60*17 = 1200-180 = 1020... that is 17h and 77.4£ per iteration...
-#
-#So what happens if we lower the batch size
-
-#for new params taking 15 min but only little resources
-
-
-
-
-#4x 3090 3.6$
-#only 2gig each 30% usage
-#looking at 15 min an epoch... thus
-
-
-
-#---- For Starting Docker locally
-# To unzip file
-#First run this
-#apt-get update ; apt-get -y install curl ; apt install unzip -qq ; pip install absl-py ; pip install matplotlib ; pip install scipy ; pip install tensorboardX ; pip install sklearn ; pip install wandb ; pip install tensorboard ; wandb login 3901faa3f69c0e6b1eaf7d3c49f7dbb8e3886dec
-
-
-#Hint for using docker: Pytorch is using dev/shm shared memory to split data loading process thus this maybe increased as standard size only 64m
-
-
-#To set up docker container before watching out for dev/shm
-#To check if it is of sufficent size execute df -h
-#docker run --rm -ti --ipc=host  -v /Users/nvw3/Desktop/repos/GitHubDesktop/deep-learning-fairness-light:/Users/nvw3/Desktop/repos/GitHubDesktop/deep-learning-fairness-light -v /Users/nvw3/Downloads/celeba:/Users/nvw3/Downloads/celeba:ro pytorch/pytorch:latest
-
-#cd /Users/nvw3/Desktop/repos/GitHubDesktop/deep-learning-fairness-light
-#python playing.py --name test
-
-
-
- 
-
-# pip added wand and tensorboard
-# wand login under wandb login 3901faa3f69c0e6b1eaf7d3c49f7dbb8e3886dec
-
-
-
-#First proper run with set parameters... currently 14 min ish per epoch, low privacy so 
-# formula is minutes per epoch times price so 14*0.8 -> 11.2
-#4gb usage with roughly 70%
-
-#Need to make simpler maybe faster example... 
-
-
-#TODO after done make a program with seed for comparison and find out the fairness metrics
-#can we use the other one for fairness comparison -new paper could be on medical data.
-#Create the datapoints that you wanted to create...
-#memorisation comparison... is one subgroup more protected than the other? should be as less data... is this true though?
-#What happens if we use less data and augment it?

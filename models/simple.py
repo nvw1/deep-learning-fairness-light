@@ -1,14 +1,15 @@
-import argparse
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import numpy as np
+import random
+
+#OLD imports TODO delete
+import datetime
+import argparse
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.autograd import Variable
-import numpy as np
-import datetime
-import random
-
 
 def reseed(seed=5):
     seed = 5
@@ -98,25 +99,25 @@ class Net(SimpleNet):
         x = self.fc2(x)
         return F.log_softmax(x, dim=1)
 
+#TODO sitll needed?
+# class FlexiNet(SimpleNet):
+#     def __init__(self, input_channel, output_dim):
+#         super(FlexiNet, self).__init__()
+#         self.conv1 = nn.Conv2d(input_channel, 20, 5, 1)
+#         self.conv2 = nn.Conv2d(20, 50, 5, 1)
+#         self.fc1 = nn.Linear(13 * 13 * 50, 500)
+#         self.fc2 = nn.Linear(500, output_dim)
 
-class FlexiNet(SimpleNet):
-    def __init__(self, input_channel, output_dim):
-        super(FlexiNet, self).__init__()
-        self.conv1 = nn.Conv2d(input_channel, 20, 5, 1)
-        self.conv2 = nn.Conv2d(20, 50, 5, 1)
-        self.fc1 = nn.Linear(13 * 13 * 50, 500)
-        self.fc2 = nn.Linear(500, output_dim)
-
-    def forward(self, x):
-            x = self.conv1(x)
-            x = F.relu(x)
-            x = F.max_pool2d(x, 2, 2)
-            x = F.relu(self.conv2(x))
-            x = F.max_pool2d(x, 2, 2)
-            x = x.view(-1, 13 * 13 * 50)
-            x = F.relu(self.fc1(x))
-            x = self.fc2(x)
-            return F.log_softmax(x, dim=1)
+#     def forward(self, x):
+#             x = self.conv1(x)
+#             x = F.relu(x)
+#             x = F.max_pool2d(x, 2, 2)
+#             x = F.relu(self.conv2(x))
+#             x = F.max_pool2d(x, 2, 2)
+#             x = x.view(-1, 13 * 13 * 50)
+#             x = F.relu(self.fc1(x))
+#             x = self.fc2(x)
+#             return F.log_softmax(x, dim=1)
 
 #
   # input_layer = tf.reshape(features['x'], [-1, 28, 28, 1])

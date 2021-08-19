@@ -32,6 +32,7 @@ class Helper:
         if not self.params.get('environment_name', False):
             self.params['environment_name'] = self.name
 
+        #TODO why this again?
         self.params['current_time'] = self.current_time
         self.params['folder_path'] = self.folder_path
 
@@ -97,47 +98,6 @@ class Helper:
             for p in parameters:
                 p.grad.data.mul_(clip_coef)
         return total_norm
-
-    #TODO may not be needed
-    # @staticmethod
-    # def clip_grad_scale_by_layer_norm(parameters, max_norm, norm_type=2):
-    #     parameters = list(filter(lambda p: p.grad is not None, parameters))
-
-    #     total_norm_weight = 0
-    #     norm_weight = dict()
-    #     for i, p in enumerate(parameters):
-    #         param_norm = p.data.norm(norm_type)
-    #         norm_weight[i] = param_norm.item()
-    #         total_norm_weight += param_norm.item() ** norm_type
-    #     total_norm_weight = total_norm_weight ** (1. / norm_type)
-
-    #     total_norm = 0
-    #     norm_grad = dict()
-    #     for i, p in enumerate(parameters):
-    #         param_norm = p.grad.data.norm(norm_type)
-    #         norm_grad[i] = param_norm.item()
-    #         total_norm += param_norm.item() ** norm_type
-    #     total_norm = total_norm ** (1. / norm_type)
-
-    #     clip_coef = max_norm / (total_norm + 1e-6)
-    #     if clip_coef < 1:
-    #         for i, p in enumerate(parameters):
-    #             if norm_grad[i] < 1e-3:
-    #                 continue
-    #             scale = norm_weight[i] / total_norm_weight
-    #             p.grad.data.mul_(math.sqrt(max_norm) * scale / norm_grad[i])
-    #     # print(total_norm)
-    #     # total_norm = 0
-    #     # norm_grad = dict()
-    #     # for i, p in enumerate(parameters):
-    #     #     param_norm = p.grad.data.norm (norm_type)
-    #     #     norm_grad[i] = param_norm
-    #     #     total_norm += param_norm.item() ** norm_type
-    #     # total_norm = total_norm ** (1. / norm_type)
-    #     # print(total_norm)
-    #     return total_norm
-
-
 
     @staticmethod
     def get_grad_vec(model, device, requires_grad=False):
