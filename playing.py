@@ -511,12 +511,11 @@ if __name__ == '__main__':
     if helper.params['dataset'] == 'celeba':
         helper.load_celeba_data()
     else:
-        print("Dataset not supported yet.")
+        raise Exception("This Dataset is not supported yet.\n \
+        Please edit in .yaml file")
+        #Set your number of classes here
         #Execute your data loader here.
         #Write dataloader in /helper.py
-        #TODO end program the way it is usually being ended.
-        #TODO or say you have selected placehod
-        #TODO make one function to stop program? as needed often
 
     helper.compute_rdp()
 
@@ -524,12 +523,14 @@ if __name__ == '__main__':
     if helper.params['dataset'] == 'celeba':
         num_classes = len(helper.labels)
     else:
-        print("Dataset not supported yet.")
-        #Set your number of classes here
-        #TODO again find the correct way to end program
+        raise Exception("Dataset not supported yet.\n \
+        Please edit in .yaml file")
+        
+
     
     #reseed(5) #TODO again check this in processcheck.
 
+    #Set model
     if helper.params['model'] == 'resnet':
         logger.info(f'Model size: {num_classes}')
         net = models.resnet18(num_classes=num_classes)
@@ -539,11 +540,11 @@ if __name__ == '__main__':
         ###TODO testing new code here:
         if torch.cuda.is_available():
             net = net.cuda()
+        else:
+            print("Using CPU.")
     else:
-        print("This model is not supported yet.")
-        # Add additional code here.
-        #TODO add unifrom execution
-        #TODO unifrom could have where this should be
+        raise Exception("This model is not supported yet.")
+        #Add further models here.
 
 
     #GPU set-up
@@ -551,12 +552,8 @@ if __name__ == '__main__':
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         logger.info(f"Let's use {torch.cuda.device_count()} GPUs!")
         net = nn.DataParallel(net)
-    #TODO figure out what happens if multi gpu is true and when it is and cpu is being used?
-    #TODO could potentially automate this?
-    #TODO test for robustness here ...
 
     net.to(device)
-
 
     #Resume model training
     if helper.params.get('resumed_model', False):
@@ -573,7 +570,6 @@ if __name__ == '__main__':
 
     logger.info(f'Total number of params for model {helper.params["model"]}: {sum(p.numel() for p in net.parameters() if p.requires_grad)}')
     
-    #TODO why?
     #Cross entpropy loss configuration
     if dp:
         criterion = nn.CrossEntropyLoss(reduction='none')
@@ -587,7 +583,7 @@ if __name__ == '__main__':
     elif helper.params['optimizer'] == 'Adam':
         optimizer = optim.Adam(net.parameters(), lr=lr, weight_decay=decay)
     else:
-        raise Exception('Specify `optimizer` in params.yaml.') #TODO other errors should be handled this way.../ else cases
+        raise Exception('Specify `optimizer` in params.yaml.')
 
     
     #Set learning rate to specific changing over milestones
@@ -600,8 +596,10 @@ if __name__ == '__main__':
     writer.add_text('Model Params', table)
     logger.info(table)
     logger.info(helper.labels)
-    epoch =0
+    epoch = 0
     # acc = test(net, epoch, "accuracy", helper.test_loader, vis=True) #seems like there is no test loader in helper
+
+    #TODO start from here and see fi the resume option still exists?
 
     #Depending on if dp or not train model for each epoch and at the end save the accuaray.
     for epoch in range(helper.start_epoch, epochs):  # loop over the dataset multiple times #TODO star epoch not defined... check doing the right thing
