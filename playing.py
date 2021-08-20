@@ -16,7 +16,7 @@ from tensorboardX import SummaryWriter
 from tqdm import tqdm as tqdm #TODO Useless?
 from image_helper import ImageHelper
 from utils.utils import create_table, plot_confusion_matrix
-from multiprocessing import freeze_support
+#from multiprocessing import freeze_support
 
 
 # This can be used to have the same random state for consistency
@@ -25,7 +25,7 @@ reseed(5)
 
 
 #Allow threat freezing
-freeze_support()
+#freeze_support()
 
 # Add wandb logging which is synced with the Tensorboard EDIT
 wandb.init(project="dfl-light", entity="nvw")
@@ -33,6 +33,7 @@ wandb.init(sync_tensorboard=True)
 
 logger = logging.getLogger('logger')
 
+#TODO get rid of freeze support
 
 # Setting up device
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -58,7 +59,7 @@ def plot(x, y, name):
     """
     Add to the writer
     """
-    freeze_support()
+    #freeze_support()
     writer.add_scalar(tag=name, scalar_value=y, global_step=x)
 
 
@@ -66,7 +67,7 @@ def compute_norm(model, norm_type=2):
     """
     Compute the total norm over the model
     """
-    freeze_support()
+    #freeze_support()
     total_norm = 0
     for p in model.parameters():
         param_norm = p.grad.data.norm(norm_type)
@@ -86,7 +87,7 @@ def test(net, epoch, testloader, vis=True):
 
     return: float: overall model accuracy
     """
-    freeze_support()
+    #freeze_support()
     #Sets module in evaluation mode
     net.eval()
     correct = 0
@@ -106,17 +107,16 @@ def test(net, epoch, testloader, vis=True):
     male_predict_labels = []
 
 
-    #with statement ensures proper aquicition and release of resources
-    #no_grad() is a context manager that disables gradient calculation
+
+    #Disabeling gradient calculation
     with torch.no_grad():
-        #Tqdm prints progress bar
-        #TODO look into hwo testloader works
-        #so we are loading all the data then predict for it and evaluate
+        #Create progress bar
+        #load all the data then predict for it and evaluate
         for data in tqdm(testloader):
 
             inputs, protected_labels, labels = data #Setting up Data
             #Protected labels are the labels of the subgroups whose performance we compare
-
+ 
 
             inputs = inputs.to(device) #device is process
             labels = labels.to(device)
@@ -195,8 +195,6 @@ def test(net, epoch, testloader, vis=True):
         plot(epoch, f1_score, "Main F1")
         
 
-
-
         #Plot important iinfo for Female performance
         plot(epoch, 100 * female_correct / female_total, "Female Accuracy")
         female_fig, female_cm = plot_confusion_matrix(female_correct_labels,
@@ -220,7 +218,7 @@ def test(net, epoch, testloader, vis=True):
 
 
         #Plot important info for Male performance if there are any males
-        #TODO find out why they would use this?
+        #TODO find out why they would use this? should be made so it works for both directions not good coding
 
         if male_total > 0:
             male_fig, male_cm = plot_confusion_matrix(male_correct_labels,
@@ -254,7 +252,7 @@ def train_dp(trainloader, model, optimizer, epoch):
     """
     #Trains for one epoch
 
-    freeze_support()
+    #freeze_support()
 
     #Set model in training mode
     model.train()
@@ -393,7 +391,7 @@ def train_dp(trainloader, model, optimizer, epoch):
 
 
 def train(trainloader, model, optimizer, epoch):
-    freeze_support()
+    #freeze_support()
     model.train()
     running_loss = 0.0
 
@@ -440,7 +438,7 @@ def train(trainloader, model, optimizer, epoch):
 
 
 if __name__ == '__main__':
-    freeze_support()
+    #freeze_support()
     parser = argparse.ArgumentParser(description='PPDL')
     parser.add_argument('--params', dest='params', default='utils/params_celeba.yaml')
     parser.add_argument('--name', dest='name', required=True)
@@ -498,7 +496,7 @@ if __name__ == '__main__':
 
     
 
-    #reseed(5) #TODO part of process investigation
+    reseed(5)
 
     #Set correct data loader
     if helper.params['dataset'] == 'celeba':
@@ -521,7 +519,7 @@ if __name__ == '__main__':
         
 
     
-    #reseed(5) #TODO again check this in processcheck.
+    reseed(5)
 
     #Set model
     if helper.params['model'] == 'resnet':
