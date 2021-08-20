@@ -4,12 +4,6 @@ import random
 from torch.utils.data import Dataset
 from PIL import Image
 
-#TODO Old imports:
-from torch.utils.data import DataLoader
-from torchvision.datasets import ImageFolder
-import torch
-
-
 
 class CelebADataset(Dataset):
     """Dataset class for the CelebA dataset."""

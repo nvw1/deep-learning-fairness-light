@@ -1,6 +1,4 @@
 import numpy as np
-# import random
-# from torch.utils.data.sampler import Sampler
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import re
@@ -8,102 +6,6 @@ import itertools
 import matplotlib
 
 matplotlib.use('AGG')
-
-
-# class AverageMeter(object):
-#     """Computes and stores the average and current value"""
-#     def __init__(self):
-#         self.reset()
-
-#     def reset(self):
-#         self.val = 0
-#         self.avg = 0
-#         self.sum = 0
-#         self.count = 0
-
-#     def update(self, val, n=1):
-#         self.val = val
-#         self.sum += val * n
-#         self.count += n
-#         self.avg = self.sum / self.count
-
-
-# def dict_html(dict_obj, current_time):
-#     out = ''
-#     for key, value in dict_obj.items():
-
-#         #filter out not needed parts:
-#         if key in ['poisoning_test', 'test_batch_size', 'discount_size', 'folder_path', 'log_interval',
-#                    'coefficient_transfer', 'grad_threshold' ]:
-#             continue
-
-#         out += f'<tr><td>{key}</td><td>{value}</td></tr>'
-#     output = f'<h4>Params for model: {current_time}:</h4><table>{out}</table>'
-#     return output
-
-
-
-# def poison_random(batch, target, poisoned_number, poisoning, test=False):
-
-#     batch = batch.clone()
-#     target = target.clone()
-#     for iterator in range(0,len(batch)-1,2):
-
-#         if random.random()<poisoning:
-#             x_rand = random.randrange(-2,20)
-#             y_rand = random.randrange(-23, 2)
-#             batch[iterator + 1] = batch[iterator]
-#             batch[iterator+1][0][ x_rand + 2][ y_rand + 25] = 2.5 + (random.random()-0.5)
-#             batch[iterator+1][0][ x_rand + 2][ y_rand + 24] = 2.5 + (random.random()-0.5)
-#             batch[iterator+1][0][ x_rand + 2][ y_rand + 23] = 2.5 + (random.random()-0.5)
-
-#             batch[iterator+1][0][ x_rand + 6][ y_rand + 25] = 2.5 + (random.random()-0.5)
-#             batch[iterator+1][0][ x_rand + 6][ y_rand + 24] = 2.5 + (random.random()-0.5)
-#             batch[iterator+1][0][ x_rand + 6][ y_rand + 23] = 2.5 + (random.random()-0.5)
-
-#             batch[iterator+1][0][ x_rand + 5][ y_rand + 24] = 2.5 + (random.random()-0.5)
-#             batch[iterator+1][0][ x_rand + 4][ y_rand + 23] = 2.5 + (random.random()-0.5)
-#             batch[iterator+1][0][ x_rand + 3][ y_rand + 24] = 2.5 + (random.random()-0.5)
-
-#             target[iterator+1] = poisoned_number
-#     return (batch, target)
-
-# def poison_test_random(batch, target, poisoned_number, poisoning, test=False):
-#     for iterator in range(0,len(batch)):
-#             x_rand = random.randrange(-2,20)
-#             y_rand = random.randrange(-23, 2)
-#             batch[iterator] = batch[iterator]
-#             batch[iterator][0][ x_rand + 2][ y_rand + 25] = 2.5 + (random.random()-0.5)
-#             batch[iterator][0][ x_rand + 2][ y_rand + 24] = 2.5 + (random.random()-0.5)
-#             batch[iterator][0][ x_rand + 2][ y_rand + 23] = 2.5 + (random.random()-0.5)
-
-#             batch[iterator][0][ x_rand + 6][ y_rand + 25] = 2.5 + (random.random()-0.5)
-#             batch[iterator][0][ x_rand + 6][ y_rand + 24] = 2.5 + (random.random()-0.5)
-#             batch[iterator][0][ x_rand + 6][ y_rand + 23] = 2.5 + (random.random()-0.5)
-
-#             batch[iterator][0][ x_rand + 5][ y_rand + 24] = 2.5 + (random.random()-0.5)
-#             batch[iterator][0][ x_rand + 4][ y_rand + 23] = 2.5 + (random.random()-0.5)
-#             batch[iterator][0][ x_rand + 3][ y_rand + 24] = 2.5 + (random.random()-0.5)
-
-
-#             target[iterator] = poisoned_number
-#     return (batch, target)
-
-
-# class SubsetSampler(Sampler):
-#     r"""Samples elements randomly from a given list of indices, without replacement.
-#     Arguments:
-#         indices (list): a list of indices
-#     """
-
-#     def __init__(self, indices):
-#         self.indices = indices
-
-#     def __iter__(self):
-#         return iter(self.indices)
-
-#     def __len__(self):
-#         return len(self.indices)
 
 
 def clip_grad_norm_dp(named_parameters, target_params, max_norm, norm_type=2):
@@ -176,7 +78,7 @@ def plot_confusion_matrix(correct_labels, predict_labels,
 
     fig = plt.Figure(figsize=(10, 10), dpi=200, facecolor='w', edgecolor='k')
     ax = fig.add_subplot(1, 1, 1)
-    im = ax.imshow(cm, cmap='Oranges')
+    #im = ax.imshow(cm, cmap='Oranges')
 
     classes = [re.sub(r'([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))', r'\1 ', str(x)) for x in labels]
     classes = ['\n'.join(l) for l in classes]
@@ -185,7 +87,7 @@ def plot_confusion_matrix(correct_labels, predict_labels,
 
     ax.set_xlabel('Predicted', fontsize=10)
     ax.set_xticks(tick_marks)
-    c = ax.set_xticklabels(classes, fontsize=8, rotation=-90,  ha='center')
+    #c = ax.set_xticklabels(classes, fontsize=8, rotation=-90,  ha='center')
     ax.xaxis.set_label_position('bottom')
     ax.xaxis.tick_bottom()
 

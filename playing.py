@@ -34,14 +34,13 @@ wandb.init(sync_tensorboard=True)
 logger = logging.getLogger('logger')
 
 
-#Setting up device
+# Setting up device
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 if torch.cuda.is_available():
     print("Good times: CUDA is available")
-#TODO probably make it stop here as otherwise would need more
 
-
+#Setting custom writer layout
 layout = {'cosine': {
     'cosine': ['Multiline', ['cosine/0',
                                          'cosine/1',
@@ -65,8 +64,7 @@ def plot(x, y, name):
 
 def compute_norm(model, norm_type=2):
     """
-    Normalize data
-    TODO check if correct
+    Compute the total norm over the model
     """
     freeze_support()
     total_norm = 0
@@ -80,7 +78,7 @@ def compute_norm(model, norm_type=2):
 
 def test(net, epoch, testloader, vis=True):
     """
-    TBD
+    Test model  accuracy after each epoch.
     net: neural network:
     epoch: int: no of epochs
     testloader: DataLoader: TODO what form exactly
@@ -164,7 +162,7 @@ def test(net, epoch, testloader, vis=True):
     if male_total > 0:
         logger.info(f'Epoch {epoch}. male acc: {100 * male_correct / male_total} total values: {male_total}')
 
-    main_acc = 100 * correct / total #Always gets overridden.
+    # main_acc = 100 * correct / total #Always gets overridden.
     
 
     i = 0
@@ -257,7 +255,7 @@ def train_dp(trainloader, model, optimizer, epoch):
     #Trains for one epoch
 
     freeze_support()
-    norm_type = 2 #TODO check if still needed not used
+
     #Set model in training mode
     model.train()
 
@@ -410,7 +408,6 @@ def train(trainloader, model, optimizer, epoch):
 
             
 
-
             # zero the parameter gradients
             optimizer.zero_grad()
 
@@ -499,10 +496,6 @@ if __name__ == '__main__':
     logger.info(lr)
     logger.info(momentum)
 
-
-
-
- ###NEW code just for one model:
     
 
     #reseed(5) #TODO part of process investigation
@@ -597,9 +590,6 @@ if __name__ == '__main__':
     logger.info(table)
     logger.info(helper.labels)
     epoch = 0
-    # acc = test(net, epoch, "accuracy", helper.test_loader, vis=True) #seems like there is no test loader in helper
-
-    #TODO start from here and see fi the resume option still exists?
 
     #Depending on if dp or not train model for each epoch and at the end save the accuaray.
     for epoch in range(helper.start_epoch, epochs):  # loop over the dataset multiple times #TODO star epoch not defined... check doing the right thing
