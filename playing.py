@@ -22,6 +22,7 @@ from utils.utils import create_table, plot_confusion_matrix
 # This can be used to have the same random state for consistency
 from models.simple import reseed
 reseed(5)
+import models
 
 
 #Allow threat freezing
@@ -403,7 +404,6 @@ def train(trainloader, model, optimizer, epoch):
 
             inputs = inputs.to(device)
             labels = labels.to(device)
-
             
 
             # zero the parameter gradients
@@ -413,6 +413,7 @@ def train(trainloader, model, optimizer, epoch):
             # forward + backward + optimize
             outputs = model(inputs)
             loss = criterion(outputs, labels)
+
 
             
             loss.backward()
@@ -425,15 +426,6 @@ def train(trainloader, model, optimizer, epoch):
                 plot(epoch * len(trainloader) + i, running_loss, 'Train Loss')
                 running_loss = 0.0
             pbar.update(1)
-
-
-
-
-
-
-
-
-
 
 
 
@@ -452,7 +444,7 @@ if __name__ == '__main__':
 
     with open(args.params) as f:
         params = yaml.load(f)
-    if params.get('model', False) == 'word':
+    if params.get('model', False) == 'word': #TODO delete deprecated code
         print("RIP text helper")
     else:
         helper = ImageHelper(current_time=d, params=params, name=args.name)
@@ -526,9 +518,11 @@ if __name__ == '__main__':
         logger.info(f'Model size: {num_classes}')
         net = models.resnet18(num_classes=num_classes)
     elif helper.params['model'] == 'PretrainedRes': #actually only using this one only
-        net = models.resnet18(pretrained=True)
-        net.fc = nn.Linear(512, num_classes)
+        # net = models.resnet18(pretrained=True)
+        # net.fc = nn.Linear(512, num_classes)
         ###TODO testing new code here:
+        net = models.resnet.PretrainedRes()
+        ###TODO testing new code here
         if torch.cuda.is_available():
             net = net.cuda()
         else:
