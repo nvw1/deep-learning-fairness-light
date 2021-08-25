@@ -283,7 +283,7 @@ def train_dp(trainloader, model, optimizer, epoch):
 
             # improving performance/ trace3 before input is used...
             # https://pytorch.org/tutorials/intermediate/memory_format_tutorial.html#converting-existing-models
-            input = input.to(memory_format=torch.channels_last)
+            inputs = inputs.to(memory_format=torch.channels_last)
 
             # Make
             outputs = model(inputs)
