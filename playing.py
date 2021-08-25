@@ -522,7 +522,7 @@ if __name__ == '__main__':
         # net = models.resnet18(pretrained=True)
         # net.fc = nn.Linear(512, num_classes)
         ###TODO testing new code here:
-        net = PretrainedRes()
+        net = PretrainedRes(num_classes)
         ###TODO testing new code here
         if torch.cuda.is_available():
             net = net.cuda()
