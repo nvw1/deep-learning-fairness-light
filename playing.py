@@ -614,6 +614,7 @@ if __name__ == '__main__':
     #Optimisation for performance trace3 TODO experimental might not work wien only cpu
     print("Optimising tensor cores:...")
     torch.backends.cudnn.benchmark = True
+    torch.cuda.amp.autocast(enabled=True)
     #TODO delete did not work
     #https://pytorch.org/tutorials/intermediate/memory_format_tutorial.html#converting-existing-models
     #net = net.to(memory_format=torch.channels_last)
