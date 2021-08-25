@@ -519,10 +519,13 @@ if __name__ == '__main__':
         logger.info(f'Model size: {num_classes}')
         net = models.resnet18(num_classes=num_classes)
     elif helper.params['model'] == 'PretrainedRes': #actually only using this one only
-        # net = models.resnet18(pretrained=True)
-        # net.fc = nn.Linear(512, num_classes)
+        #net = models.resnet18(pretrained=True)
+        net = models.mobilenet_v3_small(pretrained=True)
+        # Change final layer to our custom output
+        net.fc = nn.Linear(512, num_classes)
+
         ###TODO testing new code here:
-        net = PretrainedRes(num_classes)
+        # net = PretrainedRes(num_classes)
         ###TODO testing new code here
         if torch.cuda.is_available():
             net = net.cuda()
