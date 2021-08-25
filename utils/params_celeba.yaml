@@ -18,8 +18,12 @@ save_model: True
 dataset: celeba
 model: PretrainedRes
 
-image_dir: /content/celeba/img_align_celeba/img_align_celeba/
-attr_path: /content/celeba/imbalanced_attr/0.9.csv
+image_dir: /workspace/celeba/img_align_celeba/img_align_celeba/
+#for colab /content/celeba/img_align_celeba/img_align_celeba/
+#for vast.ai
+attr_path: /workspace/celeba/imbalanced_attr/0.9.csv
+#for colab /content/celeba/imbalanced_attr/0.9.csv
+#for vast.I
 selected_attr: Smiling
 protected_attr: Male
 labels: [0, 1]
