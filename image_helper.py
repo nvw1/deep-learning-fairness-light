@@ -62,7 +62,7 @@ class ImageHelper(Helper):
         self.train_loader = torch.utils.data.DataLoader(self.train_dataset,
                                                         batch_size=self.params['batch_size'],
                                                         shuffle=True,
-                                                        num_workers=2,
+                                                        num_workers=4, # rule of thumb 4* GPU
                                                         pin_memory=True, #For Performance improvement
                                                         drop_last=True) #Drops last batch if not divisible by batch size
 
@@ -70,7 +70,7 @@ class ImageHelper(Helper):
                                                         batch_size=self.params['test_batch_size'],
                                                         shuffle=False, #TODO changed this to true for although what is the point...
                                                         pin_memory=True, #For performance improvement
-                                                        num_workers=2)
+                                                        num_workers=4)
                 
         self.labels = self.params['labels']
         return True
