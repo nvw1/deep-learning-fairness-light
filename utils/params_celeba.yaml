@@ -27,6 +27,6 @@ attr_path: /workspace/celeba/imbalanced_attr/0.9.csv
 selected_attr: Smiling
 protected_attr: Male
 labels: [0, 1]
-multi_gpu: False #Make sure to update this for remote machines
+multi_gpu: True #Make sure to update this for remote machines
 
 #U = unique to this configuration
