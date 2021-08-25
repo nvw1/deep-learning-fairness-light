@@ -274,8 +274,16 @@ def train_dp(trainloader, model, optimizer, epoch):
 
             inputs = inputs.to(device)
             labels = labels.to(device)
-            #Clears gradient of all optimizers
-            optimizer.zero_grad()
+
+            #Clears gradient of all optimizers TODO delete old performance
+            #optimizer.zero_grad()
+
+            #Trace 3 optimze performance
+            optimizer.zero_grad(set_to_none=True)
+
+            # improving performance/ trace3 before input is used...
+            # https://pytorch.org/tutorials/intermediate/memory_format_tutorial.html#converting-existing-models
+            input = input.to(memory_format=torch.channels_last)
 
             # Make
             outputs = model(inputs)
@@ -337,7 +345,7 @@ def train_dp(trainloader, model, optimizer, epoch):
                 ##Sets all gradients of model to zero
                 #model.zero_grad()
 
-                #More efficent way of resetting:
+                #More efficent way of resetting: trace3
                 for param in model.parameters():
                     param.grad = None
 
@@ -413,8 +421,14 @@ def train(trainloader, model, optimizer, epoch):
             labels = labels.to(device)
             
 
-            # zero the parameter gradients
-            optimizer.zero_grad()
+            # zero the parameter gradients TODO old way slower
+            #optimizer.zero_grad()
+
+            #for param in optimizer.parameters():
+                #param.grad = None
+            # Trace 3 for improved performace 
+            optimizer.zero_grad(set_to_none=True)
+            
 
             
             # forward + backward + optimize
@@ -600,6 +614,9 @@ if __name__ == '__main__':
     #Optimisation for performance trace3 TODO experimental might not work wien only cpu
     print("Optimising tensor cores:...")
     torch.backends.cudnn.benchmark = True
+    #https://pytorch.org/tutorials/intermediate/memory_format_tutorial.html#converting-existing-models
+    net = net.to(memory_format=torch.channels_last)
+
 
     #Depending on if dp or not train model for each epoch and at the end save the accuaray.
     for epoch in range(helper.start_epoch, epochs):  # loop over the dataset multiple times #TODO star epoch not defined... check doing the right thing
