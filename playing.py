@@ -281,9 +281,9 @@ def train_dp(trainloader, model, optimizer, epoch):
             #Trace 3 optimze performance
             optimizer.zero_grad(set_to_none=True)
 
-            # improving performance/ trace3 before input is used...
+            # improving performance/ trace3 before input is used... TODO delet me optimisation did not work
             # https://pytorch.org/tutorials/intermediate/memory_format_tutorial.html#converting-existing-models
-            inputs = inputs.to(memory_format=torch.channels_last)
+            #inputs = inputs.to(memory_format=torch.channels_last)
 
             # Make
             outputs = model(inputs)
@@ -614,8 +614,9 @@ if __name__ == '__main__':
     #Optimisation for performance trace3 TODO experimental might not work wien only cpu
     print("Optimising tensor cores:...")
     torch.backends.cudnn.benchmark = True
+    #TODO delete did not work
     #https://pytorch.org/tutorials/intermediate/memory_format_tutorial.html#converting-existing-models
-    net = net.to(memory_format=torch.channels_last)
+    #net = net.to(memory_format=torch.channels_last)
 
 
     #Depending on if dp or not train model for each epoch and at the end save the accuaray.
