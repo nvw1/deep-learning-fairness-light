@@ -22,7 +22,8 @@ from utils.utils import create_table, plot_confusion_matrix
 # This can be used to have the same random state for consistency
 from models.simple import reseed
 reseed(5)
-import models
+
+from models.resnet import PretrainedRes
 
 
 #Allow threat freezing
@@ -521,7 +522,7 @@ if __name__ == '__main__':
         # net = models.resnet18(pretrained=True)
         # net.fc = nn.Linear(512, num_classes)
         ###TODO testing new code here:
-        net = models.PretrainedRes()
+        net = PretrainedRes()
         ###TODO testing new code here
         if torch.cuda.is_available():
             net = net.cuda()
