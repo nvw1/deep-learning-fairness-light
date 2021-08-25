@@ -333,8 +333,14 @@ def train_dp(trainloader, model, optimizer, epoch):
                     #logger.info('new grad: ', new_grad)
                         saved_var[tensor_name].add_(new_grad) # so addiung the gradient for each tensor to tensor var after loss and then clip the gradient coming out the model
 
-                #Sets all gradients of model to zero
-                model.zero_grad()
+                #Old way of resetting gradients
+                ##Sets all gradients of model to zero
+                #model.zero_grad()
+
+                #More efficent way of resetting:
+                for param in model.parameters():
+                    param.grad = None
+
 
 
             # so at this point we havve the sum of the losses s per batch
@@ -519,8 +525,8 @@ if __name__ == '__main__':
         logger.info(f'Model size: {num_classes}')
         net = models.resnet18(num_classes=num_classes)
     elif helper.params['model'] == 'PretrainedRes': #actually only using this one only
-        net = models.resnet18(pretrained=True)
-        net = models.resnet101(pretrained=True)
+        #net = models.resnet18(pretrained=True)
+        #net = models.resnet101(pretrained=True)
         #net = models.mobilenet_v3_small(pretrained=True)
         # Change final layer to our custom output
         
@@ -590,6 +596,10 @@ if __name__ == '__main__':
     logger.info(table)
     logger.info(helper.labels)
     epoch = 0
+
+    #Optimisation for performance trace3 TODO experimental might not work wien only cpu
+    print("Optimising tensor cores:...")
+    torch.backends.cudnn.benchmark = True
 
     #Depending on if dp or not train model for each epoch and at the end save the accuaray.
     for epoch in range(helper.start_epoch, epochs):  # loop over the dataset multiple times #TODO star epoch not defined... check doing the right thing
