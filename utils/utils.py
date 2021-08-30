@@ -1,3 +1,6 @@
+# Based on https://github.com/FarrandTom/deep-learning-fairness
+# from @article{farrand2020neither, title={Neither Private Nor Fair: Impact of Data Imbalance on Utility and Fairness in Differential Privacy}, author={Farrand, Tom and Mireshghallah, Fatemehsadat and Singh, Sahib and Trask, Andrew}, journal={arXiv preprint arXiv:2009.06389}, year={2020} }
+
 import numpy as np
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
@@ -39,6 +42,9 @@ def clip_grad_norm_dp(named_parameters, target_params, max_norm, norm_type=2):
     return total_norm
 
 def create_table(params: dict):
+    """
+    Table to return and show model parameters
+    """
     header = f"| {' | '.join([x[:12] for x in params.keys() if x != 'folder_path'])} |"
     line = f"|{'|:'.join([3*'-' for x in range(len(params.keys())-1)])}|"
     values = f"| {' | '.join([str(params[x]) for x in params.keys() if x != 'folder_path'])} |"
@@ -74,11 +80,9 @@ def plot_confusion_matrix(correct_labels, predict_labels,
 
 
     np.set_printoptions(precision=2)
-    ###fig, ax = matplotlib.figure.Figure()
 
     fig = plt.Figure(figsize=(10, 10), dpi=200, facecolor='w', edgecolor='k')
     ax = fig.add_subplot(1, 1, 1)
-    #im = ax.imshow(cm, cmap='Oranges')
 
     classes = [re.sub(r'([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))', r'\1 ', str(x)) for x in labels]
     classes = ['\n'.join(l) for l in classes]
@@ -87,7 +91,6 @@ def plot_confusion_matrix(correct_labels, predict_labels,
 
     ax.set_xlabel('Predicted', fontsize=10)
     ax.set_xticks(tick_marks)
-    #c = ax.set_xticklabels(classes, fontsize=8, rotation=-90,  ha='center')
     ax.xaxis.set_label_position('bottom')
     ax.xaxis.tick_bottom()
 

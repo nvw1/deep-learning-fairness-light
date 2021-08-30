@@ -1,3 +1,7 @@
+# Based on https://github.com/FarrandTom/deep-learning-fairness
+# from @article{farrand2020neither, title={Neither Private Nor Fair: Impact of Data Imbalance on Utility and Fairness in Differential Privacy}, author={Farrand, Tom and Mireshghallah, Fatemehsadat and Singh, Sahib and Trask, Andrew}, journal={arXiv preprint arXiv:2009.06389}, year={2020} }
+
+
 import torch.nn as nn
 import torchvision.models as models
 

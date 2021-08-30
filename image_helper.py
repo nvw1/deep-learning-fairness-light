@@ -1,3 +1,6 @@
+# Based on https://github.com/FarrandTom/deep-learning-fairness
+# from @article{farrand2020neither, title={Neither Private Nor Fair: Impact of Data Imbalance on Utility and Fairness in Differential Privacy}, author={Farrand, Tom and Mireshghallah, Fatemehsadat and Singh, Sahib and Trask, Andrew}, journal={arXiv preprint arXiv:2009.06389}, year={2020} }
+
 import logging
 logger = logging.getLogger('logger')
 
@@ -31,7 +34,6 @@ class ImageHelper(Helper):
         transform_train = transforms.Compose([flip, crop, resize, transforms.ToTensor(), normalize])
         #same as above but no flipping as it is the testing set
         # trace1
-        #shoudl this be flipped aswell? TODO
         transform_test = transforms.Compose([crop, resize, transforms.ToTensor(), normalize])
 
         #Accesed from celeba_dataset.py file trace1
@@ -53,15 +55,11 @@ class ImageHelper(Helper):
         logger.info(f"Length of CelebA dataset: {self.dataset_size}")
         self.dataset_size = len(self.test_dataset)
         logger.info(f"Length of CelebA testing dataset: {self.dataset_size}")
+
         
-        #TODO Maybe the different shuffles make the total a different mix?
-        #Trace1
-
-
-
         self.train_loader = torch.utils.data.DataLoader(self.train_dataset,
                                                         batch_size=self.params['batch_size'],
-                                                        shuffle=True,
+                                                        shuffle=True, #Trace1
                                                         num_workers=4, # rule of thumb 4* GPU
                                                         pin_memory=True, #For Performance improvement
                                                         drop_last=True) #Drops last batch if not divisible by batch size
