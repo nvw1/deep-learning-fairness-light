@@ -33,6 +33,8 @@ The startup file uses pre processed data set imbalances currently: [
 ]
 If you want to edit this you need to download a raw version of the celeba dataset and preprocess it wit the pre-process-data.ipynb jupyter notebook to your liking.
 
+NOTE: when running there may be a warning related to Leaking Caffe 2 threadpool this is due to an optimisation step and is not effecting the program.
+
 
 ### Datasets
 1. CelebA Datsset (from [here] (https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html))
