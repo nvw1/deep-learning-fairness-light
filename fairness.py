@@ -16,7 +16,7 @@ import torch.optim as optim
 from datetime import datetime
 from collections import defaultdict
 from tensorboardX import SummaryWriter
-from tqdm import tqdm as tqdm #TODO Useless?
+from tqdm import tqdm as tqdm
 from image_helper import ImageHelper
 from utils.utils import create_table, plot_confusion_matrix
 

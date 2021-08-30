@@ -66,7 +66,7 @@ class ImageHelper(Helper):
 
         self.test_loader = torch.utils.data.DataLoader(self.test_dataset,
                                                         batch_size=self.params['test_batch_size'],
-                                                        shuffle=False, #TODO changed this to true for although what is the point...
+                                                        shuffle=False, 
                                                         pin_memory=True, #For performance improvement
                                                         num_workers=4)
                 
