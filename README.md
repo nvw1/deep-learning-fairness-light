@@ -9,6 +9,7 @@ Ensure to edit the wandb API key to your key (accessible from the wandb website)
 
 You can either use google colab(recommended) or run a local jupyter notebook by copying or running the contents of `startup.ipynb`
 
+
 We use Python 3.7 and GPU Nvidia V100. <br />
 
 The startup file will set up the enviornment and download the code from the repository [repo] (https://github.com/nvw1/deep-learning-fairness-light) and will download and unzip the pre-processed Dataset from a google cloud services bucket into its parents directory.<br />
@@ -35,6 +36,10 @@ If you want to edit this you need to download a raw version of the celeba datase
 
 NOTE: when running there may be a warning related to Leaking Caffe 2 threadpool this is due to an optimisation step and is not effecting the program.
 
+### Quick set up Colab
+The following link contains a colab link with everything set up.
+-> NOTE: change runtime type to -> GPU!
+https://colab.research.google.com/drive/1iz9cYKfgciZac3d6m7B6fAB0VmK6r3PD?usp=sharing
 
 ### Datasets
 1. CelebA Datsset (from [here] (https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html))
